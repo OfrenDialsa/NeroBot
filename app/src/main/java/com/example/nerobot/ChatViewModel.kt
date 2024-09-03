@@ -14,9 +14,6 @@ class ChatViewModel : ViewModel() {
         mutableStateListOf<MessageModel>()
     }
 
-    val generativeModel:GenerativeModel = GenerativeModel(
-        modelName = "gemini-pro",
-        apiKey = Constant.apikey
     )
 
     fun sendMessage(question: String) {
