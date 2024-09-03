@@ -13,7 +13,10 @@ class ChatViewModel : ViewModel() {
     val messageList by lazy {
         mutableStateListOf<MessageModel>()
     }
-
+    
+    val generativeModel:GenerativeModel = GenerativeModel(
+        modelName = "gemini-pro",
+        apiKey = Constant.apikey
     )
 
     fun sendMessage(question: String) {
