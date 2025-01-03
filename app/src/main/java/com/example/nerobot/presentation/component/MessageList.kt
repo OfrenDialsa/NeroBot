@@ -5,8 +5,10 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -27,6 +29,7 @@ import com.example.nerobot.data.model.MessageModel
 import com.example.nerobot.R
 import com.example.nerobot.core.theme.ColorModelMessage
 import com.example.nerobot.core.theme.ColorUserMessage
+import com.example.nerobot.core.theme.NeroBotColor
 
 @Composable
 fun MessageRole(messageModel: MessageModel) {
@@ -46,10 +49,10 @@ fun MessageRole(messageModel: MessageModel) {
                         bottom = 8.dp
                     )
                     .clip(RoundedCornerShape(48f))
-                    .background(if (isModel) ColorModelMessage else ColorUserMessage)
+                    .background(if (isModel) NeroBotColor.ForestGreen else NeroBotColor.KellyGreen)
                     .padding(16.dp)
             ) {
-                Text(text = messageModel.message, fontWeight = FontWeight.W500, color = Color.LightGray)
+                Text(text = messageModel.message, fontWeight = FontWeight.W500, color = NeroBotColor.White)
 
             }
 
@@ -68,11 +71,12 @@ fun MessageList(modifier: Modifier = Modifier, messageList: List<MessageModel>) 
             verticalArrangement = Arrangement.Center
         ) {
             Icon(
-                modifier = Modifier.size(60.dp),
-                painter = painterResource(id = R.drawable.twotone_settings_accessibility_24),
+                modifier = Modifier.size(80.dp),
+                painter = painterResource(id = R.drawable.ic_logo),
                 contentDescription = "Icon",
-                tint = Color.LightGray
+                tint = NeroBotColor.ForestGreen
             )
+            Spacer(modifier = Modifier.height(8.dp))
             Text(text = "Selamat datang, Atmin", fontSize = 22.sp)
         }
 

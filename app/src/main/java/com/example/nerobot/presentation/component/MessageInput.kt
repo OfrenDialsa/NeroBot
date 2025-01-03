@@ -2,10 +2,12 @@ package com.example.nerobot.presentation.component
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -27,10 +29,12 @@ fun MessageInput(onMessageSend: (String) -> Unit) {
         modifier = Modifier.padding(18.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        OutlinedTextField(
+        TextFieldComp(
             value = message,
             onValueChange = { message = it },
-            modifier = Modifier.weight(1f)
+            modifier = Modifier
+                .weight(1f),
+            placeholder = "Masukkan Perintahmu"
         )
         IconButton(onClick = {
             if (message.isNotEmpty()) {
@@ -41,7 +45,8 @@ fun MessageInput(onMessageSend: (String) -> Unit) {
         }) {
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.Send,
-                contentDescription = "Send"
+                contentDescription = "Send",
+                modifier = Modifier.size(38.dp)
             )
         }
     }
