@@ -12,16 +12,20 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.nerobot.core.theme.NeroBotTheme
 import com.example.nerobot.presentation.screen.chatpage.ChatPage
 import com.example.nerobot.presentation.viewmodel.ChatViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.compose.KoinContext
 
 class MainActivity : ComponentActivity() {
+
+    private val chatViewModel: ChatViewModel by viewModel()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        val chatViewModel = ViewModelProvider(this)[ChatViewModel::class.java]
         setContent {
             NeroBotTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    ChatPage(modifier = Modifier.padding(innerPadding), chatViewModel)
+                    ChatPage(modifier = Modifier.padding(innerPadding), viewModel = chatViewModel)
                 }
             }
         }

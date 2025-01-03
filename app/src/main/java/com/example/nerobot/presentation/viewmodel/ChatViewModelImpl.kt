@@ -1,28 +1,31 @@
 package com.example.nerobot.presentation.viewmodel
 
-import androidx.compose.runtime.mutableStateListOf
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.nerobot.data.model.MessageModel
-import com.example.nerobot.domain.usecase.SendMessageUseCase
+import com.example.nerobot.domain.usecase.sendmessage.SendMessageUseCase
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-class ChatViewModelImpl(private val sendMessageUseCase: SendMessageUseCase) : ChatViewModel() {
+class ChatViewModelImpl(
+    private val sendMessageUseCase: SendMessageUseCase
+) : ChatViewModel() {
 
-    override val messageList = mutableStateListOf<MessageModel>()
+    private val _messageList = MutableStateFlow<List<MessageModel>>(emptyList())
+    override val messageList: StateFlow<List<MessageModel>> = _messageList
 
     override fun sendMessage(question: String) {
         viewModelScope.launch {
             try {
-                messageList.add(MessageModel(question, "user"))
-                messageList.add(MessageModel("Mengetik.....", "model"))
+                _messageList.value = _messageList.value + MessageModel(question, "user")
+                _messageList.value = _messageList.value + MessageModel("Mengetik.....", "model")
 
-                val response = sendMessageUseCase(messageList, question)
-                messageList.removeAt(messageList.lastIndex)
-                messageList.add(response)
+                val response = sendMessageUseCase(_messageList.value, question)
+                _messageList.value = _messageList.value.dropLast(1) + response
 
             } catch (e: Exception) {
-                messageList.removeAt(messageList.lastIndex)
-                messageList.add(MessageModel("Error: " + e.message.toString(), "model"))
+                _messageList.value = _messageList.value.dropLast(1) + MessageModel("Error: " + e.message.toString(), "model")
             }
         }
     }

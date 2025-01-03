@@ -1,4 +1,4 @@
-package com.example.nerobot.domain.usecase
+package com.example.nerobot.domain.usecase.sendmessage
 
 import com.example.nerobot.data.model.MessageModel
 import com.example.nerobot.domain.repository.ChatRepository
