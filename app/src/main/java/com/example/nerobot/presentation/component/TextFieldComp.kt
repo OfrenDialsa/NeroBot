@@ -84,7 +84,6 @@ fun TextFieldComp(
         placeholder = { Text(placeholder, color = Color.Gray) },
         modifier = modifier
             .fillMaxWidth()
-            .height(56.dp)
             .focusRequester(focusRequester)
             .onFocusChanged { focusState -> isFocused = focusState.isFocused }
             .border(
@@ -98,7 +97,9 @@ fun TextFieldComp(
                 shape = MaterialTheme.shapes.medium
             )
             .clickable(enabled = isDropdown || readOnly, onClick = { onClick?.invoke() }),
-        singleLine = true,
+        singleLine = false, // Changed to false to allow multiple lines
+        minLines = 1, // Minimum height will be 1 line
+        maxLines = 5, // Maximum of 5 lines before scrolling
         readOnly = readOnly,
         shape = MaterialTheme.shapes.medium,
         keyboardOptions = KeyboardOptions(
