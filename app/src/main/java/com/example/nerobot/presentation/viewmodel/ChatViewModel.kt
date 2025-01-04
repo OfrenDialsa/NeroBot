@@ -1,10 +1,11 @@
 package com.example.nerobot.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
-import com.example.nerobot.data.model.MessageModel
+import com.example.nerobot.domain.model.MessageDomainModel
 import kotlinx.coroutines.flow.StateFlow
 
 abstract class ChatViewModel : ViewModel() {
-    abstract val messageList: StateFlow<List<MessageModel>>
+    abstract val messageList: StateFlow<List<MessageDomainModel>>
     abstract fun sendMessage(question: String)
+    abstract fun clearMessages()
 }

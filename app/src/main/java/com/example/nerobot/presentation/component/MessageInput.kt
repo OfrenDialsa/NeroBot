@@ -26,7 +26,7 @@ fun MessageInput(onMessageSend: (String) -> Unit) {
     }
 
     Row(
-        modifier = Modifier.padding(18.dp),
+        modifier = Modifier.padding(16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         TextFieldComp(

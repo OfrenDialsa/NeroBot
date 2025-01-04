@@ -20,20 +20,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.nerobot.data.model.MessageModel
+import com.example.nerobot.domain.model.MessageDomainModel
 import com.example.nerobot.R
-import com.example.nerobot.core.theme.ColorModelMessage
-import com.example.nerobot.core.theme.ColorUserMessage
 import com.example.nerobot.core.theme.NeroBotColor
 
 @Composable
-fun MessageRole(messageModel: MessageModel) {
-    val isModel = messageModel.role == "model"
+fun MessageRole(messageDomainModel: MessageDomainModel) {
+    val isModel = messageDomainModel.role == "model"
 
     Row(
         verticalAlignment = Alignment.CenterVertically
@@ -52,7 +49,7 @@ fun MessageRole(messageModel: MessageModel) {
                     .background(if (isModel) NeroBotColor.ForestGreen else NeroBotColor.KellyGreen)
                     .padding(16.dp)
             ) {
-                Text(text = messageModel.message, fontWeight = FontWeight.W500, color = NeroBotColor.White)
+                Text(text = messageDomainModel.message, fontWeight = FontWeight.W500, color = NeroBotColor.White)
 
             }
 
@@ -63,7 +60,7 @@ fun MessageRole(messageModel: MessageModel) {
 }
 
 @Composable
-fun MessageList(modifier: Modifier = Modifier, messageList: List<MessageModel>) {
+fun MessageList(modifier: Modifier = Modifier, messageList: List<MessageDomainModel>) {
     if (messageList.isEmpty()) {
         Column(
             modifier = modifier.fillMaxSize(),
@@ -86,7 +83,7 @@ fun MessageList(modifier: Modifier = Modifier, messageList: List<MessageModel>) 
             reverseLayout = true
         ) {
             items(messageList.reversed()) {
-                MessageRole(messageModel = it)
+                MessageRole(messageDomainModel = it)
             }
         }
     }

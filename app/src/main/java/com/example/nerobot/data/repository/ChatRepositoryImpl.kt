@@ -1,18 +1,18 @@
 package com.example.nerobot.data.repository
 
-import com.example.nerobot.data.model.MessageModel
+import com.example.nerobot.domain.model.MessageDomainModel
 import com.example.nerobot.domain.repository.ChatRepository
 import com.google.ai.client.generativeai.GenerativeModel
 import com.google.ai.client.generativeai.type.content
 
 class ChatRepositoryImpl(private val generativeModel: GenerativeModel) : ChatRepository {
-    override suspend fun sendMessage(history: List<MessageModel>, question: String): MessageModel {
+    override suspend fun sendMessage(history: List<MessageDomainModel>, question: String): MessageDomainModel {
         val chat = generativeModel.startChat(
             history = history.map {
                 content(it.role) { text(it.message) }
             }.toList()
         )
         val response = chat.sendMessage(question)
-        return MessageModel(response.text.toString(), "model")
+        return MessageDomainModel(response.text.toString(), "model")
     }
 }

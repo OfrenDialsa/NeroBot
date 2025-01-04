@@ -7,7 +7,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.nerobot.presentation.component.MessageInput
 import com.example.nerobot.presentation.component.MessageList
-import com.example.nerobot.presentation.screen.AppHeader
+import com.example.nerobot.presentation.component.ScaffoldComp
 import com.example.nerobot.presentation.viewmodel.ChatViewModel
 import org.koin.androidx.compose.koinViewModel
 
@@ -18,11 +18,23 @@ fun ChatPage(
 ) {
     val messages = viewModel.messageList.collectAsState(initial = emptyList())
 
-    Column(modifier = modifier) {
-        AppHeader()
-        MessageList(modifier = Modifier.weight(1f), messageList = messages.value)
-        MessageInput(onMessageSend = { viewModel.sendMessage(it) })
-    }
+    ScaffoldComp(
+        topBar = {
+            Column {
+                ChatPageTopAppBar()
+            }
+        },
+        content = {
+            Column {
+                MessageList(modifier = Modifier.weight(1f), messageList = messages.value)
+                MessageInput(onMessageSend = { viewModel.sendMessage(it) })
+            }
+        },
+        bottomBar = {
+
+        },
+        modifier = modifier
+    )
 }
 
 @Preview
