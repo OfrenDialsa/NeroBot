@@ -14,6 +14,7 @@ android {
         versionCode = 1
         versionName = "1.0"
 
+        buildConfigField("String", "NEWS_API_KEY", "\"a248ae547ea44294886d9aab53d78ed0\"")
         buildConfigField("String", "API_KEY", "\"AIzaSyBURdIcSeAD_ahQP-KPJDINxG8UHwD2bzw\"")
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -78,4 +79,17 @@ dependencies {
     implementation(libs.koin.androidx.compose)
     implementation(libs.koin.core)
     implementation(libs.koin.android)
+
+    implementation (libs.androidx.datastore.preferences)
+    implementation (libs.moshi.kotlin)
+    implementation (libs.moshi)
+
+    implementation (libs.androidx.navigation.compose)
+
+    implementation (libs.coil.compose)
+
+    //    RETROFIT
+    implementation(libs.retrofit)
+    implementation(libs.converter.gson)
+    implementation(libs.logging.interceptor)
 }

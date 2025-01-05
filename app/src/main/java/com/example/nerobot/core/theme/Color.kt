@@ -69,6 +69,8 @@ class NeroBotColor {
         // For emphasized text color
         val Neutral500 = Color(0xFF40494A)
 
+        val Neutral500DarkMode = Color(0xFFB1C2C0)
+
         val Neutral100 = Color(0xFFC4C7C7)
 
         // For usual text color
@@ -76,6 +78,8 @@ class NeroBotColor {
 
         // For title text field color
         val Neutral300 = Color(0xFF7F8586)
+
+        val Neutral300DarkMode = Color(0xFFA0A8A9)
 
         // For background / disabled text color
         val Neutral50 = Color(0xFFECEDED)
@@ -95,6 +99,10 @@ class NeroBotColor {
 
         // For success background color
         val Green50 = Color(0xFFEEF8F2)
+
+        val Green100 = Color(0xFFDDEFE5)
+
+        val Green200 = Color(0xFFCCE6D8)
 
         // Yellow
         // For warning text background

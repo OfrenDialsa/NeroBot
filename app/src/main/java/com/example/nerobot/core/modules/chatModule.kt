@@ -8,6 +8,7 @@ import com.example.nerobot.presentation.viewmodel.ChatViewModelImpl
 import com.google.ai.client.generativeai.GenerativeModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import com.example.nerobot.BuildConfig
+import com.example.nerobot.data.local.MessageDataStore
 import org.koin.dsl.module
 
 val chatModule = module {
@@ -19,7 +20,8 @@ val chatModule = module {
     }
 
     single<ChatRepository> { ChatRepositoryImpl(get()) }
+    single { MessageDataStore(get()) }
     factory { SendMessageUseCase(get()) }
 
-    viewModel<ChatViewModel> { ChatViewModelImpl(get()) }
+    viewModel<ChatViewModel> { ChatViewModelImpl(get(), get()) }
 }

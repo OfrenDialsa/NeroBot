@@ -1,4 +1,4 @@
-package com.example.nerobot.core.util
+package com.example.nerobot.core.utils
 
 fun removeAsterisks(text: String): String {
     return text.replace(Regex("\\*{1,2}(.*?)\\*{1,2}")) { matchResult ->

@@ -2,6 +2,8 @@ package com.example.nerobot
 
 import android.app.Application
 import com.example.nerobot.core.modules.chatModule
+import com.example.nerobot.core.modules.newsModule
+import com.example.nerobot.core.modules.topBarModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
@@ -15,7 +17,11 @@ class NeroBotApp : Application() {
 
             androidContext(this@NeroBotApp)
             modules(
-                chatModule
+                listOf(
+                    topBarModule,
+                    chatModule,
+                    newsModule
+                )
             )
         }
     }
