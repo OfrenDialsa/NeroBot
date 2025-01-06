@@ -5,6 +5,7 @@ import com.example.nerobot.core.utils.removeAsterisks
 import com.example.nerobot.data.local.MessageDataStore
 import com.example.nerobot.domain.model.MessageDomainModel
 import com.example.nerobot.domain.usecase.sendmessage.SendMessageUseCase
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.first
@@ -32,17 +33,40 @@ class ChatViewModelImpl(
         viewModelScope.launch {
             try {
                 _messageList.value = _messageList.value + MessageDomainModel(question, "user")
-                _messageList.value = _messageList.value + MessageDomainModel("Mengetik.....", "model")
+
+                val typingMessageIndex = _messageList.value.size
+                _messageList.value = _messageList.value + MessageDomainModel("Mengetik.", "model")
+
+                val dots = listOf(".", "..", "...", "....")
+                var isTyping = true
+                launch {
+                    var index = 0
+                    while (isTyping) {
+                        val animatedMessage = "Mengetik${dots[index % dots.size]}"
+                        _messageList.value = _messageList.value.toMutableList().apply {
+                            this[typingMessageIndex] = MessageDomainModel(animatedMessage, "model")
+                        }
+                        index++
+                        delay(200)
+                    }
+                }
 
                 val response = sendMessageUseCase(_messageList.value, question)
 
-                val cleanedResponse = MessageDomainModel(
-                    message = removeAsterisks(response.message),
-                    role = response.role
-                )
+                isTyping = false
+                val responseMessage = removeAsterisks(response.message)
+                val responseRole = response.role
+                val animatedResponse = StringBuilder()
 
-                _messageList.value = _messageList.value.dropLast(1) + cleanedResponse
+                for (char in responseMessage) {
+                    animatedResponse.append(char)
+                    _messageList.value = _messageList.value.toMutableList().apply {
+                        this[typingMessageIndex] = MessageDomainModel(animatedResponse.toString(), responseRole)
+                    }
+                    delay(10)
+                }
 
+                _messageList.value = _messageList.value.dropLast(1) + MessageDomainModel(responseMessage, responseRole)
                 messageDataStore.saveMessages(_messageList.value)
 
             } catch (e: Exception) {

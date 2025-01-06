@@ -24,6 +24,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.nerobot.domain.model.MessageDomainModel
 import com.example.nerobot.R
 import com.example.nerobot.core.theme.NeroBotColor
@@ -49,7 +51,11 @@ fun MessageRole(messageDomainModel: MessageDomainModel) {
                     .background(if (isModel) NeroBotColor.ForestGreen else NeroBotColor.KellyGreen)
                     .padding(16.dp)
             ) {
-                Text(text = messageDomainModel.message, fontWeight = FontWeight.W500, color = NeroBotColor.White)
+                Text(
+                    text = messageDomainModel.message,
+                    fontWeight = FontWeight.W500,
+                    color = NeroBotColor.White
+                )
 
             }
 
@@ -60,7 +66,11 @@ fun MessageRole(messageDomainModel: MessageDomainModel) {
 }
 
 @Composable
-fun MessageList(modifier: Modifier = Modifier, messageList: List<MessageDomainModel>) {
+fun MessageList(
+    modifier: Modifier = Modifier,
+    messageList: List<MessageDomainModel>,
+    navController: NavController
+) {
     if (messageList.isEmpty()) {
         Column(
             modifier = modifier.fillMaxSize(),
@@ -74,7 +84,7 @@ fun MessageList(modifier: Modifier = Modifier, messageList: List<MessageDomainMo
                 tint = NeroBotColor.ForestGreen
             )
             Spacer(modifier = Modifier.height(8.dp))
-            Text(text = "Selamat datang, Atmin", fontSize = 22.sp)
+            TypingTextAnimation(text = "Selamat Datang, Atmin", navController = navController)
         }
 
     } else {

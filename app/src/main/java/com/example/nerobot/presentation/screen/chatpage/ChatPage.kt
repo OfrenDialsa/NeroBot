@@ -19,7 +19,7 @@ fun ChatPage(
     val messages = viewModel.messageList.collectAsState(initial = emptyList())
 
     Column {
-        MessageList(modifier = modifier.weight(1f), messageList = messages.value)
+        MessageList(modifier = modifier.weight(1f), messageList = messages.value, navController)
         MessageInput(onMessageSend = { viewModel.sendMessage(it) })
     }
 }

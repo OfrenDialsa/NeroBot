@@ -2,7 +2,10 @@ package com.example.nerobot.presentation.screen
 
 import android.widget.Toast
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.MoreVert
@@ -49,13 +52,14 @@ fun NeroBotTopAppBar(
 
     val context = LocalContext.current
 
-    Box(modifier = Modifier.fillMaxWidth()) {
-
-
+    Box(modifier = Modifier
+        .fillMaxWidth()
+    ) {
         TopAppBar(
+            modifier = Modifier,
             title = {
                 val titleText = when (currentRoute) {
-                    "chat" -> "Empowered by Gemini API"
+                    "chat" -> "Empowered by Gemini AI"
                     "saved" -> "Saved"
                     "news" -> "Latest News"
                     else -> "NeroBot"
@@ -64,7 +68,8 @@ fun NeroBotTopAppBar(
                 Text(
                     text = buildAnnotatedString {
                         append("NeroBot")
-                        withStyle(style = SpanStyle(fontWeight = FontWeight.Bold, color = NeroBotColor.KellyGreen)) {
+                        withStyle(style = SpanStyle(fontWeight = FontWeight.Bold, color = NeroBotColor.KellyGreen,
+                            fontSize = 26.sp)) {
                             append("  ")
                         }
                         withStyle(style = SpanStyle(fontWeight = FontWeight.Normal, fontSize = 12.sp)) {
@@ -72,7 +77,7 @@ fun NeroBotTopAppBar(
                         }
                     },
                     color = NeroBotColor.KellyGreen,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
                 )
             },
             navigationIcon = {
@@ -86,7 +91,8 @@ fun NeroBotTopAppBar(
                         Icon(imageVector = Icons.Filled.MoreVert, contentDescription = "More Options")
                     }
                 }
-            }
+            },
+
         )
 
         if (currentRoute == "chat") {
