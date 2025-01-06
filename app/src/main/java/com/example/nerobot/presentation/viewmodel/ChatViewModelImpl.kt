@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import java.net.UnknownHostException
 
 class ChatViewModelImpl(
     private val sendMessageUseCase: SendMessageUseCase,
@@ -31,6 +32,7 @@ class ChatViewModelImpl(
 
     override fun sendMessage(question: String) {
         viewModelScope.launch {
+            var isTyping = false
             try {
                 _messageList.value = _messageList.value + MessageDomainModel(question, "user")
 
@@ -38,8 +40,8 @@ class ChatViewModelImpl(
                 _messageList.value = _messageList.value + MessageDomainModel("Mengetik.", "model")
 
                 val dots = listOf(".", "..", "...", "....")
-                var isTyping = true
-                launch {
+                isTyping = true
+                val typingJob = launch {
                     var index = 0
                     while (isTyping) {
                         val animatedMessage = "Mengetik${dots[index % dots.size]}"
@@ -54,6 +56,8 @@ class ChatViewModelImpl(
                 val response = sendMessageUseCase(_messageList.value, question)
 
                 isTyping = false
+                typingJob.cancel()
+
                 val responseMessage = removeAsterisks(response.message)
                 val responseRole = response.role
                 val animatedResponse = StringBuilder()
@@ -63,14 +67,16 @@ class ChatViewModelImpl(
                     _messageList.value = _messageList.value.toMutableList().apply {
                         this[typingMessageIndex] = MessageDomainModel(animatedResponse.toString(), responseRole)
                     }
-                    delay(10)
+                    delay(20)
                 }
 
                 _messageList.value = _messageList.value.dropLast(1) + MessageDomainModel(responseMessage, responseRole)
                 messageDataStore.saveMessages(_messageList.value)
 
             } catch (e: Exception) {
-                _messageList.value = _messageList.value.dropLast(1) + MessageDomainModel("Error: " + e.message.toString(), "model")
+                isTyping = false
+                val errorMessage = "Oops! Sepertinya ada kesalahan"
+                _messageList.value = _messageList.value.dropLast(1) + MessageDomainModel(errorMessage, "model")
             }
         }
     }
