@@ -50,8 +50,17 @@ fun NeroBotTopAppBar(
     val context = LocalContext.current
 
     Box(modifier = Modifier.fillMaxWidth()) {
+
+
         TopAppBar(
             title = {
+                val titleText = when (currentRoute) {
+                    "chat" -> "Empowered by Gemini API"
+                    "saved" -> "Saved"
+                    "news" -> "Latest News"
+                    else -> "NeroBot"
+                }
+
                 Text(
                     text = buildAnnotatedString {
                         append("NeroBot")
@@ -59,7 +68,7 @@ fun NeroBotTopAppBar(
                             append("  ")
                         }
                         withStyle(style = SpanStyle(fontWeight = FontWeight.Normal, fontSize = 12.sp)) {
-                            append("Powered By Gemini API")
+                            append("-  $titleText")
                         }
                     },
                     color = NeroBotColor.KellyGreen,
@@ -94,7 +103,7 @@ fun NeroBotTopAppBar(
                         topBarViewModel.dismissDropdown()
                         Toast.makeText(
                             context,
-                            "Belum di kembangkan cik, Nunggu niat awkoakw",
+                            "Belum di develop cik, Nunggu niat awkoakw",
                             Toast.LENGTH_SHORT
                         ).show()
                     }

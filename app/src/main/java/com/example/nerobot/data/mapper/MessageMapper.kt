@@ -9,10 +9,3 @@ fun MessageDto.toDomainModel(): MessageDomainModel {
         role = this.role
     )
 }
-
-fun MessageDomainModel.toDto(): MessageDto {
-    return MessageDto(
-        message = this.message,
-        role = this.role
-    )
-}

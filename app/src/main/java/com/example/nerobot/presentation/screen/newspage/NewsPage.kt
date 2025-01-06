@@ -52,13 +52,13 @@ fun NewsPage(
                     .padding(16.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                val newsItems = result.data
+                val newsItems = result.data.articles
                 items(newsItems) { newsItem ->
                     NewsCard(
-                        title = newsItem.title ?: "No Title Available",
-                        description = newsItem.description ?: "No Description Available",
+                        title = newsItem.title,
+                        description = newsItem.description,
                         imageUrl = newsItem.urlToImage ?: "",
-                        url = newsItem.url ?: ""
+                        url = newsItem.url
                     )
                 }
             }

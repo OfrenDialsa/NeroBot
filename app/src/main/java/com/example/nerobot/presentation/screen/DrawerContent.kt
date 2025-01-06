@@ -77,7 +77,7 @@ fun DrawerContent(
                 painter = painterResource(R.drawable.ic_chat),
                 contentDescription = "Chat",
                 tint = selectedIconColor,
-                modifier = modifier.size(32.dp)
+                modifier = modifier.size(26.dp)
             )
         },
         colors = NavigationDrawerItemDefaults.colors(
@@ -96,6 +96,7 @@ fun DrawerContent(
             Text(
                 text = "Saved",
                 fontSize = 16.sp,
+                modifier = Modifier.padding(start = 5.dp)
             )
         },
         selected = selectedItem == "saved",
@@ -106,7 +107,7 @@ fun DrawerContent(
                 contentDescription = "Saved",
                 tint = selectedIconColor,
                 modifier = modifier
-                    .size(26.dp)
+                    .size(20.dp)
             )
         },
         colors = NavigationDrawerItemDefaults.colors(
@@ -126,6 +127,7 @@ fun DrawerContent(
             Text(
                 text = "Latest News",
                 fontSize = 16.sp,
+                modifier = Modifier.padding(start = 5.dp)
             )
         },
         selected = selectedItem == "news",
@@ -135,7 +137,7 @@ fun DrawerContent(
                 painter = painterResource(R.drawable.ic_news),
                 contentDescription = "News",
                 tint = selectedIconColor,
-                modifier = modifier.size(26.dp)
+                modifier = modifier.size(22.dp)
             )
         },
         colors = NavigationDrawerItemDefaults.colors(

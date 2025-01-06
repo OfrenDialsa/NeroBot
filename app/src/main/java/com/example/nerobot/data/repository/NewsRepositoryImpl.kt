@@ -1,19 +1,24 @@
 package com.example.nerobot.data.repository
 
+import com.example.nerobot.core.utils.Result
 import com.example.nerobot.data.api.ApiService
-import com.example.nerobot.data.model.NewsItem
+import com.example.nerobot.data.mapper.toDomainModel
+import com.example.nerobot.data.model.NewsResponse
+import com.example.nerobot.domain.model.NewsDomainModel
+import com.example.nerobot.domain.repository.NewsRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import com.example.nerobot.core.utils.Result
-import com.example.nerobot.domain.repository.NewsRepository
 
-class NewsRepositoryImpl(private val apiService: ApiService) : NewsRepository {
-    override fun getAllNews(): Flow<Result<List<NewsItem>>> = flow {
+class NewsRepositoryImpl(
+    private val apiService: ApiService
+) : NewsRepository {
+    override fun getAllNews(): Flow<Result<NewsDomainModel>> = flow {
         emit(Result.Loading)
         try {
-            val response = apiService.getNews()
+            val response: NewsResponse = apiService.getNews()
             if (response.status == "ok") {
-                emit(Result.Success(response.articles))
+                val domainNews = response.toDomainModel()
+                emit(Result.Success(domainNews))
             } else {
                 emit(Result.Error("Error: ${response.status}"))
             }

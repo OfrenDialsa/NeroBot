@@ -27,8 +27,6 @@ fun MainScreen(
     val navController = rememberNavController()
     val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
 
-    val selectedItem = remember { mutableStateOf("chat") }
-
     ModalNavigationDrawer(
         drawerState = drawerState,
         drawerContent = {
@@ -36,14 +34,13 @@ fun MainScreen(
                 modifier = Modifier.width(240.dp)
             ) {
                 DrawerContent(
-                    selectedItem = selectedItem.value,
+                    selectedItem = currentRoute ?: "chat",
                     onItemSelected = { item ->
-                        selectedItem.value = item
                         scope.launch { drawerState.close() }
                         if (currentRoute != item) {
                             navController.navigate(item) {
                                 launchSingleTop = true
-                                popUpTo("chat") { inclusive = false }
+                                popUpTo(navController.graph.startDestinationId) { inclusive = false }
                             }
                         }
                     }

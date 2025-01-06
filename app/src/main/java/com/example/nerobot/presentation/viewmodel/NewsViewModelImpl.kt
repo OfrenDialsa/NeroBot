@@ -8,12 +8,13 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import com.example.nerobot.core.utils.Result
+import com.example.nerobot.domain.model.NewsDomainModel
 
 
 class NewsViewModelImpl(private val newsUseCase: GetAllNewsUseCase) : NewsViewModel() {
 
-    private val _news = MutableStateFlow<Result<List<NewsItem>>>(Result.Loading)
-    override val news: StateFlow<Result<List<NewsItem>>> = _news
+    private val _news = MutableStateFlow<Result<NewsDomainModel>>(Result.Loading)
+    override val news: StateFlow<Result<NewsDomainModel>> get() = _news
 
     init {
         getAllNews()
