@@ -9,5 +9,5 @@ abstract class ChatViewModel : ViewModel() {
     abstract val isModelResponding: StateFlow<Boolean>
     abstract fun sendMessage(question: String)
     abstract fun clearMessages()
-    abstract fun cancelResponse()
+    abstract fun skipResponse()
 }

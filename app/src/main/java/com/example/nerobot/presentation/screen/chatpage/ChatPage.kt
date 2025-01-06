@@ -23,7 +23,7 @@ fun ChatPage(
         MessageList(modifier = modifier.weight(1f), messageList = messages.value, navController)
         MessageInput(
             onMessageSend = { viewModel.sendMessage(it) }, isModelResponding.value,
-            onCancelResponse = { viewModel.cancelResponse() }
+            onCancelResponse = { viewModel.skipResponse() }
         )
     }
 }

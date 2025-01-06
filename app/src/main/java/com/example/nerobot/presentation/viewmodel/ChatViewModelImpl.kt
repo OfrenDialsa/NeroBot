@@ -107,7 +107,7 @@ class ChatViewModelImpl(
         }
     }
 
-    override fun cancelResponse() {
+    override fun skipResponse() {
         responseMs = false
     }
 }
