@@ -1,52 +1,63 @@
 package com.example.nerobot.presentation.component
 
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
+import com.example.nerobot.R
 import androidx.compose.material.icons.automirrored.filled.Send
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun MessageInput(onMessageSend: (String) -> Unit) {
-
+fun MessageInput(
+    onMessageSend: (String) -> Unit,
+    isModelResponding: Boolean,
+    onCancelResponse: () -> Unit
+) {
     var message by remember {
         mutableStateOf("")
     }
 
     Row(
-        modifier = Modifier.padding(16.dp),
-        verticalAlignment = Alignment.CenterVertically
+        modifier = Modifier
+            .padding(16.dp)
+            .heightIn(min = 56.dp), // Adjusting the row height to make sure components align
+        verticalAlignment = Alignment.CenterVertically // Ensuring vertical alignment for both items
     ) {
         TextFieldComp(
             value = message,
             onValueChange = { message = it },
             modifier = Modifier
-                .weight(1f),
+                .weight(1f), // Make the TextField take as much space as possible
             placeholder = "Masukkan Perintahmu"
         )
         IconButton(onClick = {
-            if (message.isNotEmpty()) {
-                onMessageSend(message)
-                message = ""
+            if (isModelResponding) {
+                onCancelResponse()
+            } else {
+                if (message.isNotEmpty()) {
+                    onMessageSend(message)
+                    message = ""
+                }
             }
-
         }) {
             Icon(
-                imageVector = Icons.AutoMirrored.Filled.Send,
-                contentDescription = "Send",
-                modifier = Modifier.size(38.dp)
+                painter = painterResource(if (isModelResponding) R.drawable.ic_skip else R.drawable.ic_send),
+                contentDescription = if (isModelResponding) "Skip" else "Send",
+                modifier = Modifier.size(48.dp) // Adjusted size for the icon
             )
         }
     }

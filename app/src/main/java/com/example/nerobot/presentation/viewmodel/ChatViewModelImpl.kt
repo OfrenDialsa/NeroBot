@@ -5,6 +5,7 @@ import com.example.nerobot.core.utils.removeAsterisks
 import com.example.nerobot.data.local.MessageDataStore
 import com.example.nerobot.domain.model.MessageDomainModel
 import com.example.nerobot.domain.usecase.sendmessage.SendMessageUseCase
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -20,6 +21,13 @@ class ChatViewModelImpl(
     private val _messageList = MutableStateFlow<List<MessageDomainModel>>(emptyList())
     override val messageList: StateFlow<List<MessageDomainModel>> = _messageList
 
+    private val _isModelResponding = MutableStateFlow(false)
+    override val isModelResponding: StateFlow<Boolean> = _isModelResponding
+
+    private var typingJob: Job? = null
+
+    private var responseMs: Boolean = true
+
     init {
         loadMessages()
     }
@@ -32,19 +40,23 @@ class ChatViewModelImpl(
 
     override fun sendMessage(question: String) {
         viewModelScope.launch {
-            var isTyping = false
             try {
+                typingJob?.cancel()
+                responseMs = true
+
                 _messageList.value = _messageList.value + MessageDomainModel(question, "user")
 
-                val typingMessageIndex = _messageList.value.size
-                _messageList.value = _messageList.value + MessageDomainModel("Mengetik.", "model")
+                _isModelResponding.value = true
 
+                val typingMessageIndex = _messageList.value.size
+
+                _messageList.value = _messageList.value + MessageDomainModel("Mencari Jawaban.", "model")
+                var isTyping = true
                 val dots = listOf(".", "..", "...", "....")
-                isTyping = true
-                val typingJob = launch {
+                typingJob = launch {
                     var index = 0
                     while (isTyping) {
-                        val animatedMessage = "Mengetik${dots[index % dots.size]}"
+                        val animatedMessage = "Mencari Jawaban${dots[index % dots.size]}"
                         _messageList.value = _messageList.value.toMutableList().apply {
                             this[typingMessageIndex] = MessageDomainModel(animatedMessage, "model")
                         }
@@ -56,13 +68,13 @@ class ChatViewModelImpl(
                 val response = sendMessageUseCase(_messageList.value, question)
 
                 isTyping = false
-                typingJob.cancel()
 
                 val responseMessage = removeAsterisks(response.message)
                 val responseRole = response.role
                 val animatedResponse = StringBuilder()
 
                 for (char in responseMessage) {
+                    if (!responseMs) break
                     animatedResponse.append(char)
                     _messageList.value = _messageList.value.toMutableList().apply {
                         this[typingMessageIndex] = MessageDomainModel(animatedResponse.toString(), responseRole)
@@ -70,13 +82,20 @@ class ChatViewModelImpl(
                     delay(20)
                 }
 
+                _isModelResponding.value = false
                 _messageList.value = _messageList.value.dropLast(1) + MessageDomainModel(responseMessage, responseRole)
                 messageDataStore.saveMessages(_messageList.value)
 
             } catch (e: Exception) {
-                isTyping = false
+                typingJob?.cancel()
+                _isModelResponding.value = false
                 val errorMessage = "Oops! Sepertinya ada kesalahan"
-                _messageList.value = _messageList.value.dropLast(1) + MessageDomainModel(errorMessage, "model")
+
+                if (_messageList.value.isNotEmpty()) {
+                    _messageList.value = _messageList.value.dropLast(1) + MessageDomainModel(errorMessage, "model")
+                } else {
+                    _messageList.value = _messageList.value + MessageDomainModel(errorMessage, "model")
+                }
             }
         }
     }
@@ -86,5 +105,9 @@ class ChatViewModelImpl(
         viewModelScope.launch {
             messageDataStore.saveMessages(emptyList())
         }
+    }
+
+    override fun cancelResponse() {
+        responseMs = false
     }
 }
