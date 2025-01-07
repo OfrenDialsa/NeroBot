@@ -1,5 +1,6 @@
 package com.example.nerobot.presentation.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.example.nerobot.core.utils.removeAsterisks
 import com.example.nerobot.data.local.MessageDataStore
@@ -50,13 +51,13 @@ class ChatViewModelImpl(
 
                 val typingMessageIndex = _messageList.value.size
 
-                _messageList.value = _messageList.value + MessageDomainModel("Mencari Jawaban.", "model")
+                _messageList.value = _messageList.value + MessageDomainModel("Nyari jawaban.", "model")
                 var isTyping = true
                 val dots = listOf(".", "..", "...", "....")
                 typingJob = launch {
                     var index = 0
                     while (isTyping) {
-                        val animatedMessage = "Mencari Jawaban${dots[index % dots.size]}"
+                        val animatedMessage = "Nyari jawaban${dots[index % dots.size]}"
                         _messageList.value = _messageList.value.toMutableList().apply {
                             this[typingMessageIndex] = MessageDomainModel(animatedMessage, "model")
                         }
@@ -87,15 +88,36 @@ class ChatViewModelImpl(
                 messageDataStore.saveMessages(_messageList.value)
 
             } catch (e: Exception) {
-                typingJob?.cancel()
-                _isModelResponding.value = false
-                val errorMessage = "Oops! Sepertinya ada kesalahan"
+                try {
+                    typingJob?.cancel()
+                    _isModelResponding.value = false
+                    val errorMessage = "Oops! Sepertinya ada kesalahan"
 
-                if (_messageList.value.isNotEmpty()) {
-                    _messageList.value = _messageList.value.dropLast(1) + MessageDomainModel(errorMessage, "model")
-                } else {
-                    _messageList.value = _messageList.value + MessageDomainModel(errorMessage, "model")
+                    if (_messageList.value.isNotEmpty()) {
+                        _messageList.value = _messageList.value.dropLast(1) + MessageDomainModel(errorMessage, "model")
+                    } else {
+                        _messageList.value = _messageList.value + MessageDomainModel(errorMessage, "model")
+                    }
+                } catch (e: Exception) {
+                    typingJob?.cancel()
+                    _isModelResponding.value = false
+
+                    val errorMessage = when (e) {
+                        is UnknownHostException -> "Tidak ada koneksi internet"
+                        is IllegalArgumentException -> "Format pesan tidak valid"
+                        else -> "Oops! Terjadi kesalahan: ${e.message}"
+                    }
+
+                    // Log error untuk debugging
+                    Log.e("ChatViewModel", "Error sending message", e)
+
+                    if (_messageList.value.isNotEmpty()) {
+                        _messageList.value = _messageList.value.dropLast(1) + MessageDomainModel(errorMessage, "model")
+                    } else {
+                        _messageList.value = _messageList.value + MessageDomainModel(errorMessage, "model")
+                    }
                 }
+
             }
         }
     }

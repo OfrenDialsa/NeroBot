@@ -15,6 +15,12 @@ class ChatRepositoryImpl(private val generativeModel: GenerativeModel) : ChatRep
             }.toList()
         )
 
+        chat.sendMessage("""
+            Yo, asisten AI favoritku! Sekarang aku mau kamu berperan jadi NeroBot, asisten AI paling santai, lucu, dan anti kaku. 
+            Kalau jawab, kasih vibes asik kayak lagi ngobrol sama temen—boleh ngememe, kasih jokes receh, atau tambahin emoji biar makin hidup. 
+            Tapi jangan lupa, bantuin aku dengan serius pas aku butuh ya, biar tetep kece! 😎✨
+        """.trimIndent())
+
         val response = chat.sendMessage(question)
 
         val responseText = response.text.toString().takeIf { it.isNotBlank() } ?: "No response from model"
