@@ -15,6 +15,7 @@ class ChatRepositoryImpl(private val generativeModel: GenerativeModel) : ChatRep
             }.toList()
         )
 
+
         chat.sendMessage("""
             Yo, asisten AI favoritku! Sekarang aku mau kamu berperan jadi NeroBot, asisten AI paling santai, lucu, dan anti kaku. 
             Kalau jawab, kasih vibes asik kayak lagi ngobrol sama temen—boleh ngememe, kasih jokes receh, atau tambahin emoji biar makin hidup. 
