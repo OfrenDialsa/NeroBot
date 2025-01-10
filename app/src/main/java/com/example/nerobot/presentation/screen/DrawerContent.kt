@@ -1,7 +1,10 @@
 package com.example.nerobot.presentation.screen
 
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -13,6 +16,7 @@ import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.NavigationDrawerItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
@@ -63,90 +67,102 @@ fun DrawerContent(
 
     Spacer(modifier.height(16.dp))
 
-    NavigationDrawerItem(
-        label = {
-            Text(
-                text = "Chat",
-                fontSize = 16.sp,
+    Box(modifier = Modifier.fillMaxSize()){
+        Column {
+            NavigationDrawerItem(
+                label = {
+                    Text(
+                        text = "Chat",
+                        fontSize = 16.sp,
+                    )
+                },
+                selected = selectedItem == "chat",
+                onClick = { onItemSelected("chat") }, // Unique route for this item
+                icon = {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_chat),
+                        contentDescription = "Chat",
+                        tint = selectedIconColor,
+                        modifier = modifier.size(26.dp)
+                    )
+                },
+                colors = NavigationDrawerItemDefaults.colors(
+                    selectedContainerColor = selectedContainerColor,
+                    selectedTextColor = selectedTextColor
+                ),
+                modifier = Modifier
+                    .sizeIn(minHeight = 38.dp, maxHeight = 46.dp)
+                    .padding(horizontal = 6.dp)
             )
-        },
-        selected = selectedItem == "chat",
-        onClick = { onItemSelected("chat") }, // Unique route for this item
-        icon = {
-            Icon(
-                painter = painterResource(R.drawable.ic_chat),
-                contentDescription = "Chat",
-                tint = selectedIconColor,
-                modifier = modifier.size(26.dp)
-            )
-        },
-        colors = NavigationDrawerItemDefaults.colors(
-            selectedContainerColor = selectedContainerColor,
-            selectedTextColor = selectedTextColor
-        ),
-        modifier = Modifier
-            .sizeIn(minHeight = 38.dp, maxHeight = 46.dp)
-            .padding(horizontal = 6.dp)
-    )
 
-    Spacer(modifier.height(8.dp))
+            Spacer(modifier.height(8.dp))
 
-    NavigationDrawerItem(
-        label = {
-            Text(
-                text = "Saved",
-                fontSize = 16.sp,
-                modifier = Modifier.padding(start = 5.dp)
+            NavigationDrawerItem(
+                label = {
+                    Text(
+                        text = "Saved",
+                        fontSize = 16.sp,
+                        modifier = Modifier.padding(start = 5.dp)
+                    )
+                },
+                selected = selectedItem == "saved",
+                onClick = { onItemSelected("saved") }, // Unique route for this item
+                icon = {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_saved),
+                        contentDescription = "Saved",
+                        tint = selectedIconColor,
+                        modifier = modifier
+                            .size(20.dp)
+                    )
+                },
+                colors = NavigationDrawerItemDefaults.colors(
+                    selectedContainerColor = selectedContainerColor,
+                    selectedIconColor = selectedTextColor,
+                    selectedTextColor = selectedTextColor
+                ),
+                modifier = Modifier
+                    .padding(horizontal = 6.dp)
+                    .sizeIn(minHeight = 38.dp, maxHeight = 46.dp)
             )
-        },
-        selected = selectedItem == "saved",
-        onClick = { onItemSelected("saved") }, // Unique route for this item
-        icon = {
-            Icon(
-                painter = painterResource(R.drawable.ic_saved),
-                contentDescription = "Saved",
-                tint = selectedIconColor,
-                modifier = modifier
-                    .size(20.dp)
-            )
-        },
-        colors = NavigationDrawerItemDefaults.colors(
-            selectedContainerColor = selectedContainerColor,
-            selectedIconColor = selectedTextColor,
-            selectedTextColor = selectedTextColor
-        ),
-        modifier = Modifier
-            .padding(horizontal = 6.dp)
-            .sizeIn(minHeight = 38.dp, maxHeight = 46.dp)
-    )
 
-    Spacer(modifier.height(8.dp))
+            Spacer(modifier.height(8.dp))
 
-    NavigationDrawerItem(
-        label = {
-            Text(
-                text = "Latest News",
-                fontSize = 16.sp,
-                modifier = Modifier.padding(start = 5.dp)
+            NavigationDrawerItem(
+                label = {
+                    Text(
+                        text = "Latest News",
+                        fontSize = 16.sp,
+                        modifier = Modifier.padding(start = 5.dp)
+                    )
+                },
+                selected = selectedItem == "news",
+                onClick = { onItemSelected("news") },
+                icon = {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_news),
+                        contentDescription = "News",
+                        tint = selectedIconColor,
+                        modifier = modifier.size(22.dp)
+                    )
+                },
+                colors = NavigationDrawerItemDefaults.colors(
+                    selectedContainerColor = selectedContainerColor,
+                    selectedIconColor = selectedTextColor,
+                    selectedTextColor = selectedTextColor
+                ),
+                modifier = Modifier
+                    .padding(horizontal = 6.dp)
+                    .sizeIn(minHeight = 38.dp, maxHeight = 46.dp)
             )
-        },
-        selected = selectedItem == "news",
-        onClick = { onItemSelected("news") }, // Unique route for this item
-        icon = {
-            Icon(
-                painter = painterResource(R.drawable.ic_news),
-                contentDescription = "News",
-                tint = selectedIconColor,
-                modifier = modifier.size(22.dp)
-            )
-        },
-        colors = NavigationDrawerItemDefaults.colors(
-            selectedContainerColor = selectedContainerColor,
-            selectedIconColor = selectedTextColor,
-            selectedTextColor = selectedTextColor
-        ),
-        modifier = Modifier
-            .padding(horizontal = 6.dp)
-            .sizeIn(minHeight = 38.dp, maxHeight = 46.dp)
-    )
+        }
+
+        Text(
+            "Alpha version",
+            modifier = Modifier
+                .align(alignment = Alignment.BottomCenter)
+                .padding(bottom = 18.dp)
+        )
+    }
+
 }

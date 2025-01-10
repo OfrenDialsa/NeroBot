@@ -17,22 +17,12 @@ fun ChatPage(
     viewModel: ChatViewModel = koinViewModel()
 ) {
     val messages = viewModel.messageList.collectAsState(initial = emptyList())
-    val isModelResponding = viewModel.isModelResponding.collectAsState(initial = false)
 
     Column {
         MessageList(modifier = modifier.weight(1f), messageList = messages.value, navController)
-        MessageInput(
-            onMessageSend = { viewModel.sendMessage(it) }, isModelResponding.value,
-            onCancelResponse = { viewModel.skipResponse() }
-        )
     }
 }
 
-//@Preview
-//@Composable
-//fun ChatPagePreview(){
-//    ChatPage()
-//}
 
 
 

@@ -51,13 +51,13 @@ class ChatViewModelImpl(
 
                 val typingMessageIndex = _messageList.value.size
 
-                _messageList.value = _messageList.value + MessageDomainModel("Nyari jawaban.", "model")
+                _messageList.value = _messageList.value + MessageDomainModel("Loading.", "model")
                 var isTyping = true
                 val dots = listOf(".", "..", "...", "....")
                 typingJob = launch {
                     var index = 0
                     while (isTyping) {
-                        val animatedMessage = "Nyari jawaban${dots[index % dots.size]}"
+                        val animatedMessage = "Loading${dots[index % dots.size]}"
                         _messageList.value = _messageList.value.toMutableList().apply {
                             this[typingMessageIndex] = MessageDomainModel(animatedMessage, "model")
                         }
@@ -70,7 +70,7 @@ class ChatViewModelImpl(
 
                 isTyping = false
 
-                val responseMessage = removeAsterisks(response.message)
+                val responseMessage = response.message
                 val responseRole = response.role
                 val animatedResponse = StringBuilder()
 
@@ -91,7 +91,7 @@ class ChatViewModelImpl(
                 try {
                     typingJob?.cancel()
                     _isModelResponding.value = false
-                    val errorMessage = "Oops! Sepertinya ada kesalahan"
+                    val errorMessage = "Oops! Sepertinya terjadi kesalahan"
 
                     if (_messageList.value.isNotEmpty()) {
                         _messageList.value = _messageList.value.dropLast(1) + MessageDomainModel(errorMessage, "model")

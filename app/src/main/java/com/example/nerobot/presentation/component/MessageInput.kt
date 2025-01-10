@@ -25,23 +25,24 @@ import androidx.compose.ui.unit.dp
 fun MessageInput(
     onMessageSend: (String) -> Unit,
     isModelResponding: Boolean,
-    onCancelResponse: () -> Unit
+    onCancelResponse: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     var message by remember {
         mutableStateOf("")
     }
 
     Row(
-        modifier = Modifier
-            .padding(16.dp)
-            .heightIn(min = 56.dp), // Adjusting the row height to make sure components align
-        verticalAlignment = Alignment.CenterVertically // Ensuring vertical alignment for both items
+        modifier = modifier
+            .padding(start = 16.dp, bottom = 12.dp, end = 4.dp, top = 4.dp)
+            .heightIn(min = 56.dp),
+        verticalAlignment = Alignment.CenterVertically
     ) {
         TextFieldComp(
             value = message,
             onValueChange = { message = it },
             modifier = Modifier
-                .weight(1f), // Make the TextField take as much space as possible
+                .weight(1f),
             placeholder = "Masukkan Perintahmu"
         )
         IconButton(onClick = {
@@ -57,7 +58,7 @@ fun MessageInput(
             Icon(
                 painter = painterResource(if (isModelResponding) R.drawable.ic_skip else R.drawable.ic_send),
                 contentDescription = if (isModelResponding) "Skip" else "Send",
-                modifier = Modifier.size(48.dp) // Adjusted size for the icon
+                modifier = Modifier.size(48.dp)
             )
         }
     }

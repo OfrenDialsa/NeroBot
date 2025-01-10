@@ -59,7 +59,7 @@ fun NeroBotTopAppBar(
             modifier = Modifier,
             title = {
                 val titleText = when (currentRoute) {
-                    "chat" -> "Empowered by Gemini AI"
+                    "chat" -> "Chat"
                     "saved" -> "Saved"
                     "news" -> "Latest News"
                     else -> "NeroBot"
