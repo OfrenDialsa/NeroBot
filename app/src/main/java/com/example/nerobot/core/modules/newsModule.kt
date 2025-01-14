@@ -14,5 +14,5 @@ val newsModule = module {
     single<ApiService> { ApiConfig.getApiService() }
     single<NewsRepository> { NewsRepositoryImpl(get()) }
     single { GetAllNewsUseCase(get()) }
-    viewModel<NewsViewModel> { NewsViewModelImpl(get()) }
+    viewModel { NewsViewModelImpl(get()) }
 }

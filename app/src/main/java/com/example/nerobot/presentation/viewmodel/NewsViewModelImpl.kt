@@ -11,7 +11,7 @@ import com.example.nerobot.core.utils.Result
 import com.example.nerobot.domain.model.NewsDomainModel
 
 
-class NewsViewModelImpl(private val newsUseCase: GetAllNewsUseCase) : NewsViewModel() {
+class NewsViewModelImpl(private val newsUseCase: GetAllNewsUseCase) : ViewModel(), NewsViewModel {
 
     private val _news = MutableStateFlow<Result<NewsDomainModel>>(Result.Loading)
     override val news: StateFlow<Result<NewsDomainModel>> get() = _news
@@ -27,9 +27,11 @@ class NewsViewModelImpl(private val newsUseCase: GetAllNewsUseCase) : NewsViewMo
                     is Result.Error -> {
                         _news.value = Result.Error(result.exception)
                     }
+
                     is Result.Loading -> {
                         _news.value = Result.Loading
                     }
+
                     is Result.Success -> {
                         _news.value = Result.Success(result.data)
                     }

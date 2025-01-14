@@ -22,7 +22,9 @@ import kotlinx.coroutines.flow.map
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "message_prefs")
 
 class MessageDataStore(context: Context) {
+
     private val dataStore: DataStore<Preferences> = context.dataStore
+
     private val moshi = Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
     private val jsonAdapter: JsonAdapter<List<MessageDomainModel>> = moshi.adapter(
         Types.newParameterizedType(List::class.java, MessageDomainModel::class.java)
@@ -31,29 +33,15 @@ class MessageDataStore(context: Context) {
     private val messagesKey = stringPreferencesKey("messages")
 
     suspend fun saveMessages(messageList: List<MessageDomainModel>) {
-        try {
-            val json = jsonAdapter.toJson(messageList)
-            dataStore.edit { preferences ->
-                preferences[messagesKey] = json
-            }
-        } catch (e: Exception) {
-            Log.e("MessageDataStore", "Error saving messages", e)
+        val json = jsonAdapter.toJson(messageList)
+        dataStore.edit { preferences ->
+            preferences[messagesKey] = json
         }
     }
 
     val getMessages: Flow<List<MessageDomainModel>> = dataStore.data
-        .catch { exception ->
-            Log.e("MessageDataStore", "Error reading messages", exception)
-            emit(emptyPreferences())
-        }
         .map { preferences ->
-            try {
-                preferences[messagesKey]?.let { json ->
-                    jsonAdapter.fromJson(json) ?: emptyList()
-                } ?: emptyList()
-            } catch (e: Exception) {
-                Log.e("MessageDataStore", "Error parsing messages", e)
-                emptyList()
-            }
-        }
+            preferences[messagesKey]?.let { json ->
+                jsonAdapter.fromJson(json) ?: emptyList()
+            } ?: emptyList()}
 }

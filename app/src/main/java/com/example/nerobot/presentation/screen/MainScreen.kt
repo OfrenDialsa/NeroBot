@@ -37,12 +37,10 @@ import org.koin.androidx.compose.koinViewModel
 fun MainScreen(
     modifier: Modifier = Modifier,
 ) {
-    val viewModel: ChatViewModelImpl = koinViewModel()
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
     val navController = rememberNavController()
     val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
-    val isModelResponding = viewModel.isModelResponding.collectAsState(initial = false)
 
     ModalNavigationDrawer(
         drawerState = drawerState,
@@ -81,14 +79,7 @@ fun MainScreen(
                 )
             },
             bottomBar = {
-                if (currentRoute == "chat") {
-                    MessageInput(
-                        onMessageSend = { text, image -> viewModel.sendMessage(text, image) },
-                        isModelResponding = isModelResponding.value,
-                        onCancelResponse = { viewModel.skipResponse() },
-                        modifier.windowInsetsPadding(WindowInsets.systemBars.only(sides = WindowInsetsSides.Bottom))
-                    )
-                }
+
             }
         ) { padding ->
             AppNavigation(

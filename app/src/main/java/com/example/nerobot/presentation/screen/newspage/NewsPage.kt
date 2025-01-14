@@ -21,15 +21,17 @@ import androidx.navigation.NavController
 import com.example.nerobot.core.utils.Result
 import com.example.nerobot.presentation.component.NewsCard
 import com.example.nerobot.presentation.viewmodel.NewsViewModel
+import com.example.nerobot.presentation.viewmodel.NewsViewModelImpl
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun NewsPage(
     navController: NavController,
     modifier: Modifier = Modifier,
-    viewModel: NewsViewModel = koinViewModel()
 ) {
-    // Trigger loading news
+
+    val viewModel: NewsViewModelImpl = koinViewModel()
+
     LaunchedEffect(Unit) {
         viewModel.getAllNews()
     }
@@ -45,6 +47,7 @@ fun NewsPage(
                 CircularProgressIndicator()
             }
         }
+
         is Result.Success -> {
             LazyColumn(
                 modifier = Modifier
@@ -63,6 +66,7 @@ fun NewsPage(
                 }
             }
         }
+
         is Result.Error -> {
             Text(
                 text = "Error: ${result.exception}",
