@@ -1,6 +1,5 @@
 package com.example.nerobot.presentation.viewmodel
 
-import androidx.lifecycle.ViewModel
 import com.example.nerobot.domain.model.MessageDomainModel
 import kotlinx.coroutines.flow.StateFlow
 
