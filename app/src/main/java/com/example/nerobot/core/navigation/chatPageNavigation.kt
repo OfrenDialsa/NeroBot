@@ -8,11 +8,8 @@ import com.example.nerobot.presentation.screen.chatpage.ChatPage
 import com.example.nerobot.presentation.viewmodel.ChatViewModel
 import org.koin.androidx.compose.koinViewModel
 
-fun NavGraphBuilder.chatNavigation(
-    navController: NavController,
-    chatViewModel: ChatViewModel
-) {
+fun NavGraphBuilder.chatNavigation(navController: NavController) {
     composable("chat") {
-        ChatPage(navController = navController, viewModel = chatViewModel)
+        ChatPage(navController = navController)
     }
 }

@@ -2,9 +2,11 @@ package com.example.nerobot.data.local
 
 
 import android.content.Context
+import android.util.Log
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import com.squareup.moshi.Moshi
@@ -14,14 +16,13 @@ import java.lang.reflect.Type
 import com.example.nerobot.domain.model.MessageDomainModel
 import com.squareup.moshi.Types
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "message_prefs")
 
 class MessageDataStore(context: Context) {
-
     private val dataStore: DataStore<Preferences> = context.dataStore
-
     private val moshi = Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
     private val jsonAdapter: JsonAdapter<List<MessageDomainModel>> = moshi.adapter(
         Types.newParameterizedType(List::class.java, MessageDomainModel::class.java)
@@ -30,16 +31,29 @@ class MessageDataStore(context: Context) {
     private val messagesKey = stringPreferencesKey("messages")
 
     suspend fun saveMessages(messageList: List<MessageDomainModel>) {
-        val json = jsonAdapter.toJson(messageList)
-        dataStore.edit { preferences ->
-            preferences[messagesKey] = json
+        try {
+            val json = jsonAdapter.toJson(messageList)
+            dataStore.edit { preferences ->
+                preferences[messagesKey] = json
+            }
+        } catch (e: Exception) {
+            Log.e("MessageDataStore", "Error saving messages", e)
         }
     }
 
     val getMessages: Flow<List<MessageDomainModel>> = dataStore.data
+        .catch { exception ->
+            Log.e("MessageDataStore", "Error reading messages", exception)
+            emit(emptyPreferences())
+        }
         .map { preferences ->
-            preferences[messagesKey]?.let { json ->
-                jsonAdapter.fromJson(json) ?: emptyList()
-            } ?: emptyList()
+            try {
+                preferences[messagesKey]?.let { json ->
+                    jsonAdapter.fromJson(json) ?: emptyList()
+                } ?: emptyList()
+            } catch (e: Exception) {
+                Log.e("MessageDataStore", "Error parsing messages", e)
+                emptyList()
+            }
         }
 }

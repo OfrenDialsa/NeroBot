@@ -10,11 +10,10 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun AppNavigation(
     navController: NavHostController,
-    modifier: Modifier,
-    viewModel: ChatViewModel = koinViewModel()
+    modifier: Modifier
 ) {
     NavHost(navController = navController, startDestination = "chat", modifier = modifier) {
-        chatNavigation(navController = navController, chatViewModel = viewModel)
+        chatNavigation(navController)
         newsNavigation(navController)
         savedNavigation(navController)
     }

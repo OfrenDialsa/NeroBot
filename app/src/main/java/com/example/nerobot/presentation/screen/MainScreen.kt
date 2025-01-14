@@ -2,6 +2,8 @@ package com.example.nerobot.presentation.screen
 
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
@@ -27,6 +29,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.nerobot.core.navigation.AppNavigation
 import com.example.nerobot.presentation.component.MessageInput
 import com.example.nerobot.presentation.viewmodel.ChatViewModel
+import com.example.nerobot.presentation.viewmodel.ChatViewModelImpl
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
@@ -34,7 +37,7 @@ import org.koin.androidx.compose.koinViewModel
 fun MainScreen(
     modifier: Modifier = Modifier,
 ) {
-    val viewModel: ChatViewModel = koinViewModel()
+    val viewModel: ChatViewModelImpl = koinViewModel()
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
     val navController = rememberNavController()
@@ -63,6 +66,8 @@ fun MainScreen(
         }
     ) {
         Scaffold(
+            modifier = modifier
+                .fillMaxSize(),
             topBar = {
                 NeroBotTopAppBar(
                     onOpenDrawer = {
@@ -78,16 +83,17 @@ fun MainScreen(
             bottomBar = {
                 if (currentRoute == "chat") {
                     MessageInput(
-                        onMessageSend = { viewModel.sendMessage(it) }, isModelResponding.value,
+                        onMessageSend = { text, image -> viewModel.sendMessage(text, image) },
+                        isModelResponding = isModelResponding.value,
                         onCancelResponse = { viewModel.skipResponse() },
-                        Modifier.windowInsetsPadding(WindowInsets.systemBars.only(sides = WindowInsetsSides.Bottom))
+                        modifier.windowInsetsPadding(WindowInsets.systemBars.only(sides = WindowInsetsSides.Bottom))
                     )
                 }
             }
         ) { padding ->
             AppNavigation(
                 navController = navController,
-                modifier = Modifier
+                modifier = modifier
                     .padding(padding)
             )
         }

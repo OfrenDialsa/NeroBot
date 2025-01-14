@@ -4,15 +4,9 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.ui.Modifier
 import com.example.nerobot.core.theme.NeroBotTheme
 import com.example.nerobot.presentation.screen.MainScreen
-import com.example.nerobot.presentation.screen.chatpage.ChatPage
-import com.example.nerobot.presentation.viewmodel.ChatViewModel
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.compose.KoinContext
 
 class MainActivity : ComponentActivity() {
 
@@ -21,7 +15,9 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             NeroBotTheme {
-                MainScreen()
+                KoinContext {
+                    MainScreen()
+                }
             }
         }
     }

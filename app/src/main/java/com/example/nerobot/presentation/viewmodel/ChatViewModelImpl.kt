@@ -1,6 +1,7 @@
 package com.example.nerobot.presentation.viewmodel
 
 import android.util.Log
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.nerobot.core.utils.removeAsterisks
 import com.example.nerobot.data.local.MessageDataStore
@@ -17,7 +18,7 @@ import java.net.UnknownHostException
 class ChatViewModelImpl(
     private val sendMessageUseCase: SendMessageUseCase,
     private val messageDataStore: MessageDataStore
-) : ChatViewModel() {
+) : ViewModel(), ChatViewModel {
 
     private val _messageList = MutableStateFlow<List<MessageDomainModel>>(emptyList())
     override val messageList: StateFlow<List<MessageDomainModel>> = _messageList
@@ -26,7 +27,7 @@ class ChatViewModelImpl(
     override val isModelResponding: StateFlow<Boolean> = _isModelResponding
 
     private var typingJob: Job? = null
-
+    private var messageLoadJob: Job? = null
     private var responseMs: Boolean = true
 
     init {
@@ -34,97 +35,114 @@ class ChatViewModelImpl(
     }
 
     private fun loadMessages() {
-        viewModelScope.launch {
-            _messageList.value = messageDataStore.getMessages.first()
+        messageLoadJob?.cancel()
+        messageLoadJob = viewModelScope.launch {
+            messageDataStore.getMessages
+                .collect { messages ->
+                    Log.d("ChatViewModel", "Received messages update: ${messages.size} messages")
+                    _messageList.value = messages
+                }
         }
     }
 
-    override fun sendMessage(question: String) {
+    override fun sendMessage(question: String, image: String?) {
         viewModelScope.launch {
             try {
                 typingJob?.cancel()
                 responseMs = true
 
-                _messageList.value = _messageList.value + MessageDomainModel(question, "user")
+                // Update local state first
+                val updatedList = _messageList.value + MessageDomainModel(question, "user", image)
+                _messageList.value = updatedList
+
+                // Save to DataStore immediately after user message
+                messageDataStore.saveMessages(updatedList)
+                Log.d("ChatViewModel", "Saved user message to DataStore")
 
                 _isModelResponding.value = true
-
                 val typingMessageIndex = _messageList.value.size
 
-                _messageList.value = _messageList.value + MessageDomainModel("Loading.", "model")
+                // Add temporary typing message
+                _messageList.value = _messageList.value + MessageDomainModel(".", "model")
+
                 var isTyping = true
                 val dots = listOf(".", "..", "...", "....")
                 typingJob = launch {
                     var index = 0
                     while (isTyping) {
-                        val animatedMessage = "Loading${dots[index % dots.size]}"
+                        val animatedMessage = dots[index % dots.size]
                         _messageList.value = _messageList.value.toMutableList().apply {
                             this[typingMessageIndex] = MessageDomainModel(animatedMessage, "model")
                         }
                         index++
-                        delay(200)
+                        delay(300) // Delay untuk animasi
                     }
                 }
 
-                val response = sendMessageUseCase(_messageList.value, question)
+                val response = sendMessageUseCase(_messageList.value, question, image)
 
+                // Stop typing animation
                 isTyping = false
+                typingJob?.cancel()
 
+                // Finalize response message
                 val responseMessage = response.message
                 val responseRole = response.role
+                val responseImage = response.imageUrl
                 val animatedResponse = StringBuilder()
 
                 for (char in responseMessage) {
                     if (!responseMs) break
                     animatedResponse.append(char)
                     _messageList.value = _messageList.value.toMutableList().apply {
-                        this[typingMessageIndex] = MessageDomainModel(animatedResponse.toString(), responseRole)
+                        this[typingMessageIndex] = MessageDomainModel(animatedResponse.toString(), responseRole, responseImage)
                     }
-                    delay(20)
+                    delay(20) // Typing effect delay
                 }
 
                 _isModelResponding.value = false
-                _messageList.value = _messageList.value.dropLast(1) + MessageDomainModel(responseMessage, responseRole)
-                messageDataStore.saveMessages(_messageList.value)
+
+                // Update final state and save to DataStore
+                val finalList = _messageList.value.dropLast(1) + MessageDomainModel(responseMessage, responseRole, responseImage)
+                _messageList.value = finalList
+                messageDataStore.saveMessages(finalList)
+                Log.d("ChatViewModel", "Saved final response to DataStore")
 
             } catch (e: Exception) {
-                try {
-                    typingJob?.cancel()
-                    _isModelResponding.value = false
-                    val errorMessage = "Oops! Sepertinya terjadi kesalahan"
-
-                    if (_messageList.value.isNotEmpty()) {
-                        _messageList.value = _messageList.value.dropLast(1) + MessageDomainModel(errorMessage, "model")
-                    } else {
-                        _messageList.value = _messageList.value + MessageDomainModel(errorMessage, "model")
-                    }
-                } catch (e: Exception) {
-                    typingJob?.cancel()
-                    _isModelResponding.value = false
-
-                    val errorMessage = when (e) {
-                        is UnknownHostException -> "Tidak ada koneksi internet"
-                        is IllegalArgumentException -> "Format pesan tidak valid"
-                        else -> "Oops! Terjadi kesalahan: ${e.message}"
-                    }
-
-                    // Log error untuk debugging
-                    Log.e("ChatViewModel", "Error sending message", e)
-
-                    if (_messageList.value.isNotEmpty()) {
-                        _messageList.value = _messageList.value.dropLast(1) + MessageDomainModel(errorMessage, "model")
-                    } else {
-                        _messageList.value = _messageList.value + MessageDomainModel(errorMessage, "model")
-                    }
-                }
-
+                Log.e("ChatViewModel", "Error in sendMessage", e)
+                handleError(e)
             }
         }
     }
 
+    private fun handleError(e: Exception) {
+        try {
+            typingJob?.cancel()
+            _isModelResponding.value = false
+            val errorMessage = when (e) {
+                is UnknownHostException -> "Tidak ada koneksi internet"
+                is IllegalArgumentException -> "Format pesan tidak valid"
+                else -> "Oops! Sepertinya terjadi kesalahan: ${e.message}"
+            }
+
+            val updatedList = if (_messageList.value.isNotEmpty()) {
+                _messageList.value.dropLast(1) + MessageDomainModel(errorMessage, "model")
+            } else {
+                listOf(MessageDomainModel(errorMessage, "model"))
+            }
+
+            _messageList.value = updatedList
+            viewModelScope.launch {
+                messageDataStore.saveMessages(updatedList)
+            }
+        } catch (e: Exception) {
+            Log.e("ChatViewModel", "Error handling error", e)
+        }
+    }
+
     override fun clearMessages() {
-        _messageList.value = emptyList()
         viewModelScope.launch {
+            _messageList.value = emptyList()
             messageDataStore.saveMessages(emptyList())
         }
     }

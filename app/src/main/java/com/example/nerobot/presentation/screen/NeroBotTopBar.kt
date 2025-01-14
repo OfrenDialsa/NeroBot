@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
@@ -35,6 +36,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.nerobot.core.theme.NeroBotColor
 import com.example.nerobot.presentation.viewmodel.ChatViewModel
+import com.example.nerobot.presentation.viewmodel.ChatViewModelImpl
 import com.example.nerobot.presentation.viewmodel.TopBarViewModel
 import org.koin.androidx.compose.koinViewModel
 
@@ -43,16 +45,17 @@ import org.koin.androidx.compose.koinViewModel
 fun NeroBotTopAppBar(
     onOpenDrawer: () -> Unit,
     currentRoute: String,
-    viewModel: ChatViewModel = koinViewModel(),
-    topBarViewModel: TopBarViewModel = koinViewModel()
+    modifier: Modifier = Modifier
 ) {
+    val viewModel: ChatViewModelImpl = koinViewModel()
+    val topBarViewModel: TopBarViewModel = koinViewModel()
     val expanded = topBarViewModel.isDropdownExpanded.collectAsState().value
     val showClearChatDialog = topBarViewModel.showClearChatDialog.collectAsState().value
     val showEmptyMessageDialog = topBarViewModel.showEmptyMessageDialog.collectAsState().value
 
     val context = LocalContext.current
 
-    Box(modifier = Modifier
+    Box(modifier = modifier
         .fillMaxWidth()
     ) {
         TopAppBar(

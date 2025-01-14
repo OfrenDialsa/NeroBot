@@ -16,6 +16,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
@@ -31,6 +32,9 @@ fun TextFieldComp(
     placeholder: String,
     onClick: (() -> Unit)? = null,
     leadingIcon: (@Composable (() -> Unit))? = null,
+    leadingIconOnClick: (() -> Unit)? = null,
+    trailingIcon: (@Composable (() -> Unit))? = null,
+    trailingIconOnClick: (() -> Unit)? = null,
     modifier: Modifier = Modifier
 ) {
     var isFocused by remember { mutableStateOf(false) }
@@ -47,7 +51,26 @@ fun TextFieldComp(
             .onFocusChanged { focusState -> isFocused = focusState.isFocused }
             .clickable(onClick = { onClick?.invoke() }),
         shape = MaterialTheme.shapes.extraLarge,
-        leadingIcon = leadingIcon,
+        leadingIcon = {
+            leadingIcon?.let {
+                Modifier
+                    .clip(shape = MaterialTheme.shapes.extraLarge)
+                    .clickable {
+                    leadingIconOnClick?.invoke()
+                }.run {
+                    it()
+                }
+            }
+        },
+        trailingIcon = {
+            trailingIcon?.let {
+                Modifier.clickable {
+                    trailingIconOnClick?.invoke()
+                }.run {
+                    it()
+                }
+            }
+        },
         maxLines = 5,
         colors = TextFieldDefaults.colors(
             cursorColor = if (isFocused) NeroBotColor.Green300 else LocalTextStyle.current.color,
