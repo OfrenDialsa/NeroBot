@@ -1,16 +1,18 @@
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.jetbrains.kotlin.android)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.compose)
+    id("com.google.devtools.ksp")
 }
 
 android {
-    namespace = "com.example.nerobot"
-    compileSdk = 34
+    namespace = "com.nerodev.nerobot"
+    compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.example.nerobot"
+        applicationId = "com.nerodev.nerobot"
         minSdk = 26
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 
@@ -58,6 +60,8 @@ android {
 
 dependencies {
 
+    implementation("com.google.ai.client.generativeai:generativeai:0.9.0")
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -66,30 +70,79 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
-    androidTestImplementation(platform(libs.androidx.compose.bom))
-    androidTestImplementation(libs.androidx.ui.test.junit4)
+    implementation (libs.material3)
+    implementation (libs.ui)
+    implementation (libs.androidx.foundation)
+    implementation (libs.androidx.material)
+    implementation (libs.androidx.documentfile)
+    implementation(libs.androidx.runtime.android)
+    implementation(libs.androidx.ui.test.junit4.android)
+
+    // Debug
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
-    implementation("com.google.ai.client.generativeai:generativeai:0.9.0")
+
+    //Coil
+    implementation (libs.coil.compose)
+
+    // Navigation
+    implementation(libs.androidx.navigation.compose)
+
+    // Location
+    implementation (libs.play.services.location)
+    implementation (libs.maps.compose)
+    implementation (libs.play.services.maps)
+
+    // Retrofit
+    implementation(libs.retrofit)
+    implementation(libs.retrofit.gson)
+    implementation(libs.logging.interceptor)
+    implementation(libs.glide)
+    implementation(libs.glide.compose)
+
+    // Gmaps
+    implementation(libs.maps.compose)
+    implementation(libs.play.services.location)
+    implementation(libs.play.services.maps)
+
+    // Serialization JSON
+    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.gson)
+
+    // Room
+    implementation(libs.androidx.room.runtime)
+    ksp(libs.androidx.room.compiler)
+    implementation(libs.androidx.room.ktx)
 
     // Koin
     implementation(libs.koin.androidx.compose)
     implementation(libs.koin.core)
-    implementation(libs.koin.android)
 
+    // Data Store
     implementation (libs.androidx.datastore.preferences)
-    implementation (libs.moshi.kotlin)
+    implementation (libs.androidx.datastore.core)
+
+    //Coroutine
+    implementation (libs.kotlinx.coroutines.android)
+
+    //Testing
+    testImplementation(libs.junit)
+    testImplementation(libs.junit.jupiter)
+    testImplementation(libs.mockito.kotlin)
+    testImplementation(libs.mockito.core)
+    testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.turbine)
+    testImplementation(libs.androidx.core.testing)
+
+    //Moshi
     implementation (libs.moshi)
+    implementation (libs.moshi.kotlin)
 
-    implementation (libs.androidx.navigation.compose)
+    ksp (libs.moshi.kotlin.codegen)
 
-    implementation (libs.coil.compose)
+    androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.androidx.espresso.core)
+    androidTestImplementation(platform(libs.androidx.compose.bom))
+    androidTestImplementation(libs.androidx.ui.test.junit4)
 
-    //    RETROFIT
-    implementation(libs.retrofit)
-    implementation(libs.converter.gson)
-    implementation(libs.logging.interceptor)
 }
