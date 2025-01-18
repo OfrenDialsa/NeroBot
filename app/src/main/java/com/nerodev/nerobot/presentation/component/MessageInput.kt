@@ -1,5 +1,6 @@
 package com.nerodev.nerobot.presentation.component
 
+import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.clickable
@@ -17,9 +18,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.nerodev.nerobot.R
+import com.nerodev.nerobot.core.utils.getFileName
 
 @Composable
 fun MessageInput(
@@ -29,30 +32,35 @@ fun MessageInput(
     modifier: Modifier = Modifier
 ) {
     var message by remember { mutableStateOf("") }
-    var imageUri by remember { mutableStateOf<String?>(null) }
+    var imageUri by remember { mutableStateOf<Uri?>(null) }
+    var fileName by remember { mutableStateOf<String?>(null) }
 
+    val context = LocalContext.current
     val launcher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.GetContent(),
-        onResult = { selectedImageUri ->
-            imageUri = selectedImageUri?.toString()
-        }
-    )
+        contract = ActivityResultContracts.GetContent()
+    ) { selectedImageUri ->
+        imageUri = selectedImageUri
+        fileName = selectedImageUri?.getFileName(context) ?: "Unknown"
+    }
 
     Column(modifier = modifier.padding(8.dp)) {
         imageUri?.let { uri ->
-            val fileName = uri.substringAfterLast("/")
-            ImageUriCard(fileName = fileName) {
-                imageUri = null
-            }
+            ImageUriCard(
+                fileUri = uri, // Pass the correct Uri to ImageUriCard
+                onDelete = {
+                    imageUri = null
+                    fileName = null
+                },
+                context = context
+            )
         }
 
         Row(
             modifier = Modifier
-                .padding(top = 3.dp) // Ensure spacing between the URI text and the input field
+                .padding(top = 3.dp)
                 .heightIn(min = 56.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-
             TextFieldComp(
                 value = message,
                 onValueChange = { message = it },
@@ -64,9 +72,7 @@ fun MessageInput(
                         contentDescription = "Attach Image",
                         modifier = Modifier
                             .size(28.dp)
-                            .clickable {
-                                launcher.launch("image/*")
-                            }
+                            .clickable { launcher.launch("image/*") }
                     )
                 }
             )
@@ -75,8 +81,10 @@ fun MessageInput(
                     onCancelResponse()
                 } else {
                     if (message.isNotEmpty() || imageUri != null) {
-                        onMessageSend(message, imageUri)
+                        onMessageSend(message, imageUri?.toString())
                         message = ""
+                        imageUri = null
+                        fileName = null
                     }
                 }
             }) {

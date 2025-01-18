@@ -79,11 +79,14 @@ class NeroBotColor {
 
         // Green
 
-        val Green100 = Color(0xFFA7E581) // Lebih terang
-        val Green200 = Color(0xFF89D65B) // Sedikit lebih terang
-        val Green300 = Color(0xFF65B836) // KellyGreen (Warna utama)
-        val Green400 = Color(0xFF50942C) // Sedikit lebih gelap
-        val Green500 = Color(0xFF3C6E21) // Lebih gelap
+        val Green100 = Color(0xFF62C97F) // Lighter shade
+        val Green200 = Color(0xFF4FBF4E)
+        val Green300 = Color(0xFF3DBB1E) // Base color is in this range
+        val Green400 = Color(0xFF2D9A1E)
+        val Green500 = ForestGreen // Original color
+        val Green600 = Color(0xFF1C7A18) // Darker shade
+        val Green700 = Color(0xFF155914) // Even darker
+        val Green800 = Color(0xFF0E480F) // Deepest shade
 
         // Yellow
         // For warning text background

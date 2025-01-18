@@ -61,7 +61,7 @@ fun MessageRole(messageDomainModel: MessageDomainModel) {
                         containerColor = if (isModel) {
                             Color.Unspecified
                         } else {
-                            if (isDarkTheme) NeroBotColor.ForestGreen else NeroBotColor.Green200
+                            if (isDarkTheme) NeroBotColor.Green600 else NeroBotColor.Green200
                         }
                     ),
                     modifier = Modifier

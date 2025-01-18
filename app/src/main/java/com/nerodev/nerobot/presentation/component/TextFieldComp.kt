@@ -3,6 +3,7 @@ package com.nerodev.nerobot.presentation.component
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -69,9 +70,13 @@ fun TextFieldComp(
         },
         maxLines = 5,
         colors = TextFieldDefaults.colors(
-            cursorColor = if (isFocused) NeroBotColor.Green300 else LocalTextStyle.current.color,
+            cursorColor = NeroBotColor.Green300,
             focusedIndicatorColor = NeroBotColor.Green400,
-            unfocusedIndicatorColor = NeroBotColor.Green500
+            unfocusedIndicatorColor = NeroBotColor.Green500,
+            selectionColors = TextSelectionColors(
+                handleColor = NeroBotColor.Green300,
+                backgroundColor = NeroBotColor.Green100 // Color for the selected text background
+            )
         )
     )
 }
