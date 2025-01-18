@@ -88,9 +88,6 @@ dependencies {
 
     implementation (libs.coil.compose)
 
-    implementation("androidx.compose.ui:ui:1.5.0")
-    implementation("androidx.compose.runtime:runtime:1.5.0")
-
     //    RETROFIT
     implementation(libs.retrofit)
     implementation(libs.converter.gson)

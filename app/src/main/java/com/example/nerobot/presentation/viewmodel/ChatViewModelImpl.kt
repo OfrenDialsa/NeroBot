@@ -50,7 +50,7 @@ class ChatViewModelImpl(
                 val typingMessageIndex = _messageList.value.size
                 _messageList.value = _messageList.value + MessageDomainModel("", "model")
                 var isTyping = true
-                val dots = listOf("", ".", "..", "...", "....")
+                val dots = listOf("", ".", "..")
 
                 typingJob = launch {
                     var index = 0
@@ -93,6 +93,7 @@ class ChatViewModelImpl(
                 } else {
                     _messageList.value = _messageList.value + MessageDomainModel(errorMessage, "model")
                 }
+                messageDataStore.saveMessages(_messageList.value)
             }
         }
     }
