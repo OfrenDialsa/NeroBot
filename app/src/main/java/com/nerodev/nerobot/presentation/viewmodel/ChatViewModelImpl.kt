@@ -1,5 +1,6 @@
 package com.nerodev.nerobot.presentation.viewmodel
 
+import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nerodev.nerobot.core.utils.removeAsterisks
@@ -22,6 +23,15 @@ class ChatViewModelImpl(
 
     private val _isModelResponding = MutableStateFlow(false)
     override val isModelResponding: StateFlow<Boolean> = _isModelResponding
+
+    private val _message = MutableStateFlow("")
+    override val message: StateFlow<String> = _message
+
+    private val _imageUri = MutableStateFlow<Uri?>(null)
+    override val imageUri: StateFlow<Uri?> = _imageUri
+
+    private val _errorMessage = MutableStateFlow<String?>(null)
+    override val errorMessage: StateFlow<String?> = _errorMessage
 
     private var typingJob: Job? = null
     private var responseMs: Boolean = true
@@ -96,6 +106,26 @@ class ChatViewModelImpl(
                 messageDataStore.saveMessages(_messageList.value)
             }
         }
+    }
+
+    override fun onMessageChange(newMessage: String) {
+        _message.value = newMessage
+    }
+
+    override fun onImageSelected(uri: Uri?, fileName: String?) {
+        _imageUri.value = uri
+    }
+
+    override fun clearImage() {
+        _imageUri.value = null
+    }
+
+    override fun setErrorMessage(error: String) {
+        _errorMessage.value = error
+    }
+
+    override fun clearErrorMessage() {
+        _errorMessage.value = null
     }
 
     override fun clearMessages() {

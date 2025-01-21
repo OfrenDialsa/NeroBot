@@ -1,6 +1,7 @@
 package com.nerodev.nerobot.presentation.component
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.text.selection.TextSelectionColors
@@ -19,7 +20,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.nerodev.nerobot.core.theme.NeroBotColor
 
 @Composable
@@ -36,6 +39,7 @@ fun TextFieldComp(
 ) {
     var isFocused by remember { mutableStateOf(false) }
     val focusRequester = FocusRequester()
+    val isDarkTheme = isSystemInDarkTheme()
 
     OutlinedTextField(
         value = value,
@@ -43,7 +47,7 @@ fun TextFieldComp(
         placeholder = { Text(placeholder, color = NeroBotColor.Neutral300) },
         modifier = modifier
             .fillMaxWidth()
-            .heightIn(min = 40.dp, max = 100.dp)
+            .heightIn(min = 36.dp)
             .focusRequester(focusRequester)
             .onFocusChanged { focusState -> isFocused = focusState.isFocused }
             .clickable(onClick = { onClick?.invoke() }),
@@ -71,12 +75,15 @@ fun TextFieldComp(
         maxLines = 5,
         colors = TextFieldDefaults.colors(
             cursorColor = NeroBotColor.Green300,
-            focusedIndicatorColor = NeroBotColor.Green400,
-            unfocusedIndicatorColor = NeroBotColor.Green500,
+            focusedIndicatorColor = if (isDarkTheme) NeroBotColor.Green700 else NeroBotColor.Green400,
+            unfocusedIndicatorColor = Color.Transparent,
             selectionColors = TextSelectionColors(
                 handleColor = NeroBotColor.Green300,
-                backgroundColor = NeroBotColor.Green100 // Color for the selected text background
+                backgroundColor = if (isDarkTheme) NeroBotColor.Green300 else NeroBotColor.Green100
             )
+        ),
+        textStyle = LocalTextStyle.current.copy(
+            lineHeight = 18.sp
         )
     )
 }

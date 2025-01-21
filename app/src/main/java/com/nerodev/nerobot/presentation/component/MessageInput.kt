@@ -1,6 +1,7 @@
 package com.nerodev.nerobot.presentation.component
 
 import android.net.Uri
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.clickable
@@ -12,10 +13,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -23,33 +21,52 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.nerodev.nerobot.R
 import com.nerodev.nerobot.core.utils.getFileName
+import com.nerodev.nerobot.core.utils.getFileSize
+import com.nerodev.nerobot.presentation.viewmodel.ChatViewModelImpl
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun MessageInput(
     onMessageSend: (String, String?) -> Unit,
     isModelResponding: Boolean,
     onCancelResponse: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    viewModel: ChatViewModelImpl = koinViewModel()
 ) {
-    var message by remember { mutableStateOf("") }
-    var imageUri by remember { mutableStateOf<Uri?>(null) }
-    var fileName by remember { mutableStateOf<String?>(null) }
+    val message = viewModel.message.collectAsState().value
+    val imageUri = viewModel.imageUri.collectAsState().value
+    val errorMessage = viewModel.errorMessage.collectAsState().value
 
     val context = LocalContext.current
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
-    ) { selectedImageUri ->
-        imageUri = selectedImageUri
-        fileName = selectedImageUri?.getFileName(context) ?: "Unknown"
+    ) { uri: Uri? ->
+        if (uri != null) {
+            val mimeType = context.contentResolver.getType(uri) ?: ""
+            if (mimeType.startsWith("image/")) {
+                val selectedFileName = uri.getFileName(context) ?: "Unknown File"
+                val fileSize = uri.getFileSize(context)
+
+                if (fileSize > 10 * 1024 * 1024) {
+                    viewModel.setErrorMessage("File cannot exceed 10 MB.")
+                } else {
+                    viewModel.onImageSelected(uri, selectedFileName)
+                    viewModel.clearErrorMessage()
+                }
+            } else {
+                viewModel.setErrorMessage("Selected file is not an image.")
+            }
+        } else {
+            viewModel.setErrorMessage("No image selected.")
+        }
     }
 
     Column(modifier = modifier.padding(8.dp)) {
         imageUri?.let { uri ->
             ImageUriCard(
-                fileUri = uri, // Pass the correct Uri to ImageUriCard
+                fileUri = uri,
                 onDelete = {
-                    imageUri = null
-                    fileName = null
+                    viewModel.clearImage()
                 },
                 context = context
             )
@@ -63,7 +80,7 @@ fun MessageInput(
         ) {
             TextFieldComp(
                 value = message,
-                onValueChange = { message = it },
+                onValueChange = { viewModel.onMessageChange(it) },
                 modifier = Modifier.weight(1f),
                 placeholder = "Masukkan Perintahmu",
                 leadingIcon = {
@@ -72,7 +89,7 @@ fun MessageInput(
                         contentDescription = "Attach Image",
                         modifier = Modifier
                             .size(28.dp)
-                            .clickable { launcher.launch("image/*") }
+                            .clickable { launcher.launch("*/*") }
                     )
                 }
             )
@@ -82,9 +99,8 @@ fun MessageInput(
                 } else {
                     if (message.isNotEmpty() || imageUri != null) {
                         onMessageSend(message, imageUri?.toString())
-                        message = ""
-                        imageUri = null
-                        fileName = null
+                        viewModel.onMessageChange("")
+                        viewModel.clearImage()
                     }
                 }
             }) {
@@ -95,5 +111,11 @@ fun MessageInput(
                 )
             }
         }
+
+        errorMessage?.let {
+            Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+            viewModel.clearErrorMessage()
+        }
     }
 }
+

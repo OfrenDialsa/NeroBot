@@ -25,7 +25,6 @@ fun TypingTextAnimation(
     if (currentRoute == "chat") {
         LaunchedEffect(key1 = true) {
             while (true) {
-                // Typing effect
                 for (i in fullText.indices) {
                     displayedText.value = fullText.substring(0, i + 1)
                     delay(typingSpeed)

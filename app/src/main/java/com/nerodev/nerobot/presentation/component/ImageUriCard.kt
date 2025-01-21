@@ -2,7 +2,6 @@ package com.nerodev.nerobot.presentation.component
 
 import android.content.Context
 import android.net.Uri
-import android.provider.OpenableColumns
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding

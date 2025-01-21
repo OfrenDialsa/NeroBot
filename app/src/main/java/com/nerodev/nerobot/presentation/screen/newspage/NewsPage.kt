@@ -37,7 +37,7 @@ fun NewsPage(
     when (result) {
         is Result.Loading -> {
             Box(
-                modifier = Modifier.fillMaxSize(),
+                modifier = modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
             ) {
                 CircularProgressIndicator()
@@ -66,7 +66,7 @@ fun NewsPage(
         is Result.Error -> {
             Text(
                 text = "Error: ${result.exception}",
-                modifier = Modifier.padding(16.dp)
+                modifier = modifier.padding(16.dp)
             )
         }
     }

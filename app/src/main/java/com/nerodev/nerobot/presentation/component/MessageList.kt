@@ -3,7 +3,6 @@ package com.nerodev.nerobot.presentation.component
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -23,13 +22,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.nerodev.nerobot.domain.model.MessageDomainModel
 import com.nerodev.nerobot.R
 import com.nerodev.nerobot.core.theme.NeroBotColor
+import com.nerodev.nerobot.domain.model.MessageDomainModel
 
 @Composable
 fun MessageRole(messageDomainModel: MessageDomainModel) {
@@ -103,7 +103,7 @@ fun MessageList(
                 tint = NeroBotColor.ForestGreen
             )
             Spacer(modifier = Modifier.height(8.dp))
-            TypingTextAnimation(text = "Selamat Datang, Atmin", navController = navController)
+            TypingTextAnimation(text = "Selamat Datang, Bos!", navController = navController)
         }
 
     } else {
