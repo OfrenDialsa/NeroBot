@@ -24,7 +24,6 @@ import com.nerodev.nerobot.core.utils.getFileName
 
 @Composable
 fun ImageUriCard(fileUri: Uri, context: Context, onDelete: () -> Unit) {
-    // Ensure Uri is passed correctly and file name is extracted
     val fileName = remember { fileUri.getFileName(context) ?: "Unknown File" }
 
     Card(

@@ -17,7 +17,7 @@ android {
         versionName = "1.0"
 
         buildConfigField("String", "NEWS_API_KEY", "\"a248ae547ea44294886d9aab53d78ed0\"")
-        buildConfigField("String", "API_KEY", "\"AIzaSyBURdIcSeAD_ahQP-KPJDINxG8UHwD2bzw\"")
+        buildConfigField("String", "GEMINI_API_KEY", "\"AIzaSyBURdIcSeAD_ahQP-KPJDINxG8UHwD2bzw\"")
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -62,6 +62,7 @@ dependencies {
 
     implementation("com.google.ai.client.generativeai:generativeai:0.9.0")
 
+// AndroidX Core
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -70,62 +71,52 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
-    implementation (libs.material3)
-    implementation (libs.ui)
-    implementation (libs.androidx.foundation)
-    implementation (libs.androidx.material)
-    implementation (libs.androidx.documentfile)
+    implementation(libs.androidx.foundation)
+    implementation(libs.androidx.material)
+    implementation(libs.androidx.documentfile)
     implementation(libs.androidx.runtime.android)
     implementation(libs.androidx.ui.test.junit4.android)
 
-    // Debug
+// Debugging
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
-    //Coil
-    implementation (libs.coil.compose)
+// Coil
+    implementation(libs.coil.compose)
 
-    // Navigation
+// Navigation
     implementation(libs.androidx.navigation.compose)
 
-    // Location
-    implementation (libs.play.services.location)
-    implementation (libs.maps.compose)
-    implementation (libs.play.services.maps)
-
-    // Retrofit
+// Retrofit
     implementation(libs.retrofit)
     implementation(libs.retrofit.gson)
     implementation(libs.logging.interceptor)
+
+// Glide
     implementation(libs.glide)
     implementation(libs.glide.compose)
 
-    // Gmaps
-    implementation(libs.maps.compose)
-    implementation(libs.play.services.location)
-    implementation(libs.play.services.maps)
-
-    // Serialization JSON
+// Serialization
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.gson)
 
-    // Room
+// Room
     implementation(libs.androidx.room.runtime)
     ksp(libs.androidx.room.compiler)
     implementation(libs.androidx.room.ktx)
 
-    // Koin
+// Koin
     implementation(libs.koin.androidx.compose)
     implementation(libs.koin.core)
 
-    // Data Store
-    implementation (libs.androidx.datastore.preferences)
-    implementation (libs.androidx.datastore.core)
+// Data Store
+    implementation(libs.androidx.datastore.preferences)
+    implementation(libs.androidx.datastore.core)
 
-    //Coroutine
-    implementation (libs.kotlinx.coroutines.android)
+// Coroutines
+    implementation(libs.kotlinx.coroutines.android)
 
-    //Testing
+// Testing
     testImplementation(libs.junit)
     testImplementation(libs.junit.jupiter)
     testImplementation(libs.mockito.kotlin)
@@ -134,12 +125,12 @@ dependencies {
     testImplementation(libs.turbine)
     testImplementation(libs.androidx.core.testing)
 
-    //Moshi
-    implementation (libs.moshi)
-    implementation (libs.moshi.kotlin)
+// Moshi
+    implementation(libs.moshi)
+    implementation(libs.moshi.kotlin)
+    ksp(libs.moshi.kotlin.codegen)
 
-    ksp (libs.moshi.kotlin.codegen)
-
+// Android Testing
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))

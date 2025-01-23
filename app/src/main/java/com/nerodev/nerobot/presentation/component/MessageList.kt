@@ -18,6 +18,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -25,7 +26,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.nerodev.nerobot.R
 import com.nerodev.nerobot.core.theme.NeroBotColor
@@ -88,6 +91,13 @@ fun MessageList(
     messageList: List<MessageDomainModel>,
     navController: NavController
 ) {
+    val greetingOptions = listOf(
+        "NeroBot siap membantu",
+        "Wazzup?",
+        "Ada pertanyaan?",
+        "Sokin ngab",
+        "Halo Manusia"
+    )
 
     if (messageList.isEmpty()) {
         Column(
@@ -103,7 +113,11 @@ fun MessageList(
                 tint = NeroBotColor.ForestGreen
             )
             Spacer(modifier = Modifier.height(8.dp))
-            TypingTextAnimation(text = "Selamat Datang, Bos!", navController = navController)
+            val randomGreeting = greetingOptions.random()
+            Text(text = randomGreeting,
+                fontSize = 22.sp,
+                fontWeight = FontWeight.Bold
+            )
         }
 
     } else {

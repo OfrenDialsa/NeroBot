@@ -25,7 +25,6 @@ fun NewsPage(
     navController: NavController,
     modifier: Modifier = Modifier,
 ) {
-
     val viewModel: NewsViewModelImpl = koinViewModel()
 
     LaunchedEffect(Unit) {

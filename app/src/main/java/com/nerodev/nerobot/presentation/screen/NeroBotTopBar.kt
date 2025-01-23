@@ -40,8 +40,9 @@ fun NeroBotTopAppBar(
     currentRoute: String,
     modifier: Modifier = Modifier
 ) {
-    val viewModel: ChatViewModelImpl = koinViewModel()
+    val chatViewModel: ChatViewModelImpl = koinViewModel()
     val topBarViewModel: TopBarViewModelImpl = koinViewModel()
+
     val expanded = topBarViewModel.isDropdownExpanded.collectAsState().value
     val showClearChatDialog = topBarViewModel.showClearChatDialog.collectAsState().value
     val showEmptyMessageDialog = topBarViewModel.showEmptyMessageDialog.collectAsState().value
@@ -115,7 +116,7 @@ fun NeroBotTopAppBar(
                     text = { Text("Clear Chat") },
                     onClick = {
                         topBarViewModel.dismissDropdown()
-                        if (viewModel.messageList.value.isEmpty()) {
+                        if (chatViewModel.messageList.value.isEmpty()) {
                             topBarViewModel.showEmptyMessageDialog()
                         } else {
                             topBarViewModel.showClearChatDialog()
@@ -132,7 +133,7 @@ fun NeroBotTopAppBar(
                 text = { Text("Are you sure to clear the current chat?") },
                 confirmButton = {
                     TextButton(onClick = {
-                        viewModel.clearMessages()
+                        chatViewModel.clearMessages()
                         topBarViewModel.dismissClearChatDialog()
                     }) {
                         Text(text = "Yes", color = NeroBotColor.KellyGreen)

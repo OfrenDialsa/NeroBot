@@ -3,7 +3,6 @@ package com.nerodev.nerobot.presentation.viewmodel
 import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.nerodev.nerobot.core.utils.removeAsterisks
 import com.nerodev.nerobot.data.local.MessageDataStore
 import com.nerodev.nerobot.domain.model.MessageDomainModel
 import com.nerodev.nerobot.domain.usecase.sendmessage.SendMessageUseCase
@@ -77,7 +76,7 @@ class ChatViewModelImpl(
                 val response = sendMessageUseCase(_messageList.value, question)
                 isTyping = false
 
-                val responseMessage = removeAsterisks(response.message)
+                val responseMessage = response.message
                 val responseRole = response.role
                 val animatedResponse = StringBuilder()
 

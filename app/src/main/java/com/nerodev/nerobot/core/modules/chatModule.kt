@@ -14,7 +14,7 @@ val chatModule = module {
     single {
         GenerativeModel(
             modelName = "gemini-pro",
-            apiKey = BuildConfig.API_KEY,
+            apiKey = BuildConfig.GEMINI_API_KEY,
         )
     }
 
