@@ -114,9 +114,9 @@ fun MessageList(
             )
             Spacer(modifier = Modifier.height(8.dp))
             val randomGreeting = greetingOptions.random()
-            Text(text = randomGreeting,
-                fontSize = 22.sp,
-                fontWeight = FontWeight.Bold
+            TypingTextAnimation(
+                text = randomGreeting,
+                navController = navController
             )
         }
 
