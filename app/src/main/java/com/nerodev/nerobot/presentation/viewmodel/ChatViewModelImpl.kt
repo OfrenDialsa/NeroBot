@@ -6,15 +6,11 @@ import androidx.lifecycle.viewModelScope
 import com.nerodev.nerobot.data.local.MessageDataStore
 import com.nerodev.nerobot.domain.model.MessageDomainModel
 import com.nerodev.nerobot.domain.usecase.sendmessage.SendMessageUseCase
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
 
 class ChatViewModelImpl(
     private val messageDataStore: MessageDataStore,
@@ -37,8 +33,7 @@ class ChatViewModelImpl(
     override val errorMessage: StateFlow<String?> = _errorMessage
 
     private var typingJob: Job? = null
-    private var responseMs = true
-    private val mutex = Mutex()
+    private var responseMs: Boolean = true
 
     init {
         loadMessages()
@@ -54,77 +49,61 @@ class ChatViewModelImpl(
 
     override fun sendMessage(question: String, image: String?) {
         viewModelScope.launch {
-            mutex.withLock {
-                try {
-                    typingJob?.cancel()
-                    responseMs = true
+            try {
+                typingJob?.cancel()
+                responseMs = true
 
-                    _messageList.update { it + MessageDomainModel(question, "user") }
-                    _isModelResponding.value = true
+                _messageList.value = _messageList.value + MessageDomainModel(question, "user")
+                _isModelResponding.value = true
 
-                    val typingMessageIndex = _messageList.value.size
-                    _messageList.update { it + MessageDomainModel("", "model") }
+                val typingMessageIndex = _messageList.value.size
+                _messageList.value = _messageList.value + MessageDomainModel("", "model")
+                var isTyping = true
+                val dots = listOf("", ".", "..")
 
-                    typingJob = startTypingAnimation(typingMessageIndex)
-
-                    val response = sendMessageUseCase(_messageList.value, question)
-
-                    typingJob?.cancel()
-                    _isModelResponding.value = false
-
-                    updateResponseMessage(typingMessageIndex, response.message, response.role)
-                    messageDataStore.saveMessages(_messageList.value)
-
-                } catch (e: Exception) {
-                    handleSendMessageError()
+                typingJob = launch {
+                    var index = 0
+                    while (isTyping) {
+                        val animatedMessage = ".${dots[index % dots.size]}"
+                        _messageList.value = _messageList.value.toMutableList().apply {
+                            this[typingMessageIndex] = MessageDomainModel(animatedMessage, "model")
+                        }
+                        index++
+                        delay(200)
+                    }
                 }
-            }
-        }
-    }
 
-    private fun CoroutineScope.startTypingAnimation(index: Int) = launch {
-        val dots = listOf("", ".", "..")
-        var dotIndex = 0
-        while (responseMs) {
-            _messageList.update {
-                it.toMutableList().apply {
-                    this[index] = MessageDomainModel(".${dots[dotIndex % dots.size]}", "model")
+                val response = sendMessageUseCase(_messageList.value, question)
+                isTyping = false
+
+                val responseMessage = response.message
+                val responseRole = response.role
+                val animatedResponse = StringBuilder()
+
+                for (char in responseMessage) {
+                    if (!responseMs) break
+                    animatedResponse.append(char)
+                    _messageList.value = _messageList.value.toMutableList().apply {
+                        this[typingMessageIndex] = MessageDomainModel(animatedResponse.toString(), responseRole)
+                    }
+                    delay(20)
                 }
-            }
-            dotIndex++
-            delay(200)
-        }
-    }
 
-    private suspend fun updateResponseMessage(index: Int, message: String, role: String) {
-        val animatedResponse = StringBuilder()
-        for (char in message) {
-            if (!responseMs) break
-            animatedResponse.append(char)
-            _messageList.update {
-                it.toMutableList().apply {
-                    this[index] = MessageDomainModel(animatedResponse.toString(), role)
+                _isModelResponding.value = false
+                _messageList.value = _messageList.value.dropLast(1) + MessageDomainModel(responseMessage, responseRole)
+                messageDataStore.saveMessages(_messageList.value)
+
+            } catch (e: Exception) {
+                typingJob?.cancel()
+                _isModelResponding.value = false
+                val errorMessage = "Oops! Sepertinya ada kesalahan"
+                if (_messageList.value.isNotEmpty()) {
+                    _messageList.value = _messageList.value.dropLast(1) + MessageDomainModel(errorMessage, "model")
+                } else {
+                    _messageList.value = _messageList.value + MessageDomainModel(errorMessage, "model")
                 }
+                messageDataStore.saveMessages(_messageList.value)
             }
-            delay(20)
-        }
-        _messageList.update {
-            it.dropLast(1) + MessageDomainModel(message, role)
-        }
-    }
-
-    private fun handleSendMessageError() {
-        typingJob?.cancel()
-        _isModelResponding.value = false
-
-        val errorMessage = "Oops! Sepertinya ada kesalahan"
-        _messageList.update {
-            if (it.isNotEmpty()) it.dropLast(1) + MessageDomainModel(errorMessage, "model")
-            else it + MessageDomainModel(errorMessage, "model")
-        }
-
-        viewModelScope.launch {
-            messageDataStore.saveMessages(_messageList.value)
         }
     }
 
@@ -150,11 +129,9 @@ class ChatViewModelImpl(
 
     override fun clearMessages() {
         viewModelScope.launch {
-            mutex.withLock {
-                typingJob?.cancel()
-                _messageList.value = emptyList()
-                messageDataStore.saveMessages(emptyList())
-            }
+            typingJob?.cancel()
+            _messageList.value = emptyList()
+            messageDataStore.saveMessages(emptyList())
         }
     }
 

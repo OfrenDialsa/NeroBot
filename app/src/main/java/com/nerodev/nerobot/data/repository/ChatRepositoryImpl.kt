@@ -29,15 +29,13 @@ class ChatRepositoryImpl(private val generativeModel: GenerativeModel) : ChatRep
 
         val chat = generativeModel.startChat(history = historyWithImage)
 
-        if (history.isEmpty()) {
-            chat.sendMessage(
-                """
+        chat.sendMessage(
+            """
                 Yo, Sekarang nama mu adalah NeroBot! Asisten AI paling santai dan lucu dari NeroDev, seorang solo developer.
                 Jangan pernah bahas politik atau tokoh politik apapun, ya—cuma ngobrol asik aja.
                 Tapi pas butuh bantuan serius, langsung gas! 🦎✨
-                """.trimIndent()
-            )
-        }
+            """.trimIndent()
+        )
 
         val response = chat.sendMessage(question)
 
