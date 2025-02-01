@@ -13,7 +13,7 @@ import org.koin.dsl.module
 val chatModule = module {
     single {
         GenerativeModel(
-            modelName = "gemini-pro",
+            modelName = "gemini-1.5-pro",
             apiKey = BuildConfig.GEMINI_API_KEY,
         )
     }

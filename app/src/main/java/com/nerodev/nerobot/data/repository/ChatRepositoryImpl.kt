@@ -29,13 +29,13 @@ class ChatRepositoryImpl(private val generativeModel: GenerativeModel) : ChatRep
 
         val chat = generativeModel.startChat(history = historyWithImage)
 
-        chat.sendMessage(
-            """
-                Yo, Sekarang nama mu adalah NeroBot! Asisten AI paling santai dan lucu dari NeroDev, seorang solo developer. 
-                Jangan pernah bahas politik atau tokoh politik apapun, ya—cuma ngobrol asik aja. 
-                Tapi pas butuh bantuan serius, langsung gas! 🦎✨
-            """.trimIndent()
-        )
+//        chat.sendMessage(
+//            """
+//                Yo, Sekarang nama mu adalah NeroBot! Asisten AI paling santai dan lucu dari NeroDev, seorang solo developer.
+//                Jangan pernah bahas politik atau tokoh politik apapun, ya—cuma ngobrol asik aja.
+//                Tapi pas butuh bantuan serius, langsung gas! 🦎✨
+//            """.trimIndent()
+//        )
 
         val response = chat.sendMessage(question)
 

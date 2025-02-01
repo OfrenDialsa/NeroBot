@@ -10,6 +10,7 @@ interface ChatViewModel {
     val message: StateFlow<String>
     val imageUri: StateFlow<Uri?>
     val errorMessage: StateFlow<String?>
+
     fun sendMessage(question: String, image: String?)
     fun clearMessages()
     fun skipResponse()
