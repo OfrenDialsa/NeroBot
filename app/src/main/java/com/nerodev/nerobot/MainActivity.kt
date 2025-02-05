@@ -9,7 +9,6 @@ import com.nerodev.nerobot.presentation.screen.MainScreen
 import org.koin.compose.KoinContext
 
 class MainActivity : ComponentActivity() {
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()

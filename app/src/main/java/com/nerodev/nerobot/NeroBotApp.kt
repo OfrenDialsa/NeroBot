@@ -14,7 +14,6 @@ class NeroBotApp : Application() {
         super.onCreate()
         startKoin {
             androidLogger(Level.DEBUG)
-
             androidContext(this@NeroBotApp)
             modules(
                 listOf(
@@ -25,5 +24,4 @@ class NeroBotApp : Application() {
             )
         }
     }
-
 }
