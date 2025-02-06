@@ -86,7 +86,7 @@ NeroBot uses the **Gemini API** for AI interactions and a **News API** for fetch
 
 1. **Gemini API:** Sign up and get your API key from [Gemini AI](https://aistudio.google.com/).  
 2. **News API:** Obtain an API key from [NewsAPI](https://newsapi.org) (or another source).  
-3. **Store the keys securely** in `local.properties`:  
+3. **Store the keys securely** in `gradle.properties`:  
    ```properties
    GEMINI_API_KEY=your_gemini_api_key
    NEWS_API_KEY=your_news_api_key
