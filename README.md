@@ -18,7 +18,7 @@ Nerobot is a fun and lively AI assistant app built using **Jetpack Compose** and
 ## Installation
 1. Clone the repository:
    ```sh
-   git clone https://github.com/yourusername/nerobot.git
+   git clone https://github.com/OfrenDialsa/nerobot.git
    ```
 2. Open the project in Android Studio.
 3. Sync dependencies and build the project.
