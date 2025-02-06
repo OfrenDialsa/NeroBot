@@ -24,7 +24,7 @@ NeroBot is an AI-powered assistant developed using **Jetpack Compose** and **Gem
 | **News API**    | newsapi.org |
 | **Architecture** | Clean Architecture (Use Case, Repository, ViewModel) |
 | **Dependency Injection** | Koin |
-| **Data Storage** | Room and DataStore |
+| **Data Storage** | Room + DataStore |
 | **Networking**  | Retrofit + OkHttp |
 
 ---
