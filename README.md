@@ -37,13 +37,14 @@ _Include screenshots of the app here._
 
 ## 🛠️ Installation  
 
-1. **Open the project in Android Studio.**  
-2. **Add your API keys** in the `local.properties` or appropriate config file:  
+1. **Open the project in Android Studio.**
+2. **Rename `gradle.properties.example` to `gradle.properties`**
+3. **Add your API keys** in the `gradle.properties` or appropriate config file:  
    ```properties
    GEMINI_API_KEY=your_gemini_api_key
    NEWS_API_KEY=your_news_api_key
    ```  
-3. **Run the app** on an emulator or physical device.  
+4. **Run the app** on an emulator or physical device.  
 
 ---
 
@@ -65,13 +66,14 @@ NeroBot follows **Clean Architecture**, ensuring separation of concerns and scal
  │   └── 📂 model        # Domain models
  │
  ├── 📂 presentation     # UI layer (Jetpack Compose, ViewModel)
- │   ├── 📂 ui           # Screens and components
- │   ├── 📂 viewmodel    # ViewModels for managing UI state
- │   └── 📂 navigation   # App navigation (Jetpack Navigation)
+ │   ├── 📂 components   # Reusable Components
+ │   ├── 📂 screen       # App Screens
+ │   └── 📂 viewmodel    # ViewModels for managing UI state   
  │
- ├── 📂 di               # Dependency Injection (Koin modules)
- ├── 📂 utils            # Helper functions, constants
  └── 📂 core             # Core components, such as base classes
+     ├── 📂 navigation   # App navigation (Jetpack Navigation)
+     ├── 📂 utils        # Helper functions, constants
+     └── 📂 module       # App Module(Koin DI)   
 ```
 
 ---
