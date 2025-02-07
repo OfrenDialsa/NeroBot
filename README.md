@@ -1,4 +1,4 @@
-# 🦎✨ NeroBot  
+# NeroBot🦎✨  
 
 NeroBot is an AI-powered assistant developed using **Jetpack Compose** and **Gemini API**. It offers a **fun and lively chat experience** while also keeping users updated with the **latest news**. Built with **Clean Architecture**, NeroBot ensures a modular, maintainable, and scalable codebase.  
 
@@ -38,7 +38,7 @@ _Include screenshots of the app here._
 ## 🛠️ Installation  
 
 1. **Open the project in Android Studio.**
-2. **Rename `gradle.properties.example` to `gradle.properties`**
+2. **Rename** `gradle.properties.example` to `gradle.properties`
 3. **Add your API keys** in the `gradle.properties` or appropriate config file:  
    ```properties
    GEMINI_API_KEY=your_gemini_api_key
