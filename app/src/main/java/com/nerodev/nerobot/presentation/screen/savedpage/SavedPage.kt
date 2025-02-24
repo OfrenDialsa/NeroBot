@@ -37,7 +37,7 @@ fun SavedPage(
             Icon(
                 modifier = Modifier.size(80.dp),
                 painter = painterResource(id = R.drawable.ic_null),
-                contentDescription = "Null",
+                contentDescription = null,
                 tint = NeroBotColor.ForestGreen
             )
             Spacer(modifier = Modifier.height(24.dp))

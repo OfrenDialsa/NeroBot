@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nerodev.nerobot.data.local.MessageDataStore
 import com.nerodev.nerobot.domain.model.MessageDomainModel
-import com.nerodev.nerobot.domain.usecase.sendmessage.SendMessageUseCase
+import com.nerodev.nerobot.domain.usecase.sendmessageusecase.SendMessageUseCase
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow

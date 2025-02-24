@@ -5,7 +5,7 @@ import com.nerodev.nerobot.BuildConfig
 import com.nerodev.nerobot.data.local.MessageDataStore
 import com.nerodev.nerobot.data.repository.ChatRepositoryImpl
 import com.nerodev.nerobot.domain.repository.ChatRepository
-import com.nerodev.nerobot.domain.usecase.sendmessage.SendMessageUseCase
+import com.nerodev.nerobot.domain.usecase.sendmessageusecase.SendMessageUseCase
 import com.nerodev.nerobot.presentation.viewmodel.ChatViewModelImpl
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module

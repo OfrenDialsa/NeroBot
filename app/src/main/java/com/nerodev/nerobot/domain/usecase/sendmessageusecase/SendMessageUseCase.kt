@@ -1,4 +1,4 @@
-package com.nerodev.nerobot.domain.usecase.sendmessage
+package com.nerodev.nerobot.domain.usecase.sendmessageusecase
 
 import com.nerodev.nerobot.domain.model.MessageDomainModel
 import com.nerodev.nerobot.domain.repository.ChatRepository
