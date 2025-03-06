@@ -6,7 +6,7 @@ import com.nerodev.nerobot.domain.repository.NewsRepository
 import kotlinx.coroutines.flow.Flow
 
 class GetAllNewsUseCase (private val repository: NewsRepository){
-    suspend operator fun invoke() : Flow<Result<NewsDomainModel>> {
+    operator fun invoke() : Flow<Result<NewsDomainModel>> {
         return repository.getAllNews()
     }
 }

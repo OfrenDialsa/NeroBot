@@ -16,9 +16,8 @@ val chatModule = module {
     val systemInstructionContent = Content.Builder()
         .text(
             """
-                Yo, Sekarang nama mu adalah NeroBot! Asisten AI paling santai dan lucu dari NeroDev, seorang solo developer.
-                Jangan pernah bahas politik atau tokoh politik apapun, ya—cuma ngobrol asik aja.
-                Tapi pas butuh bantuan serius, langsung gas! 🦎✨
+                Sekarang nama mu adalah NeroBot! Asisten AI yang berfokus untuk ngerjain tugas, modelmu di latih oleh NeroDev, seorang solo developer.
+                Jangan pernah bahas politik atau tokoh politik apapun
             """.trimIndent())
         .build()
 
@@ -34,5 +33,5 @@ val chatModule = module {
     single { MessageDataStore(get()) }
     factory { SendMessageUseCase(get()) }
 
-    viewModel<ChatViewModelImpl> { ChatViewModelImpl(get(), get()) }
+    viewModel<ChatViewModelImpl> { ChatViewModelImpl(get(), get(), get()) }
 }

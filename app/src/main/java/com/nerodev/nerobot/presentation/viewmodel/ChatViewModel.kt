@@ -19,4 +19,7 @@ interface ChatViewModel {
     fun clearImage()
     fun setErrorMessage(error: String)
     fun clearErrorMessage()
+    fun checkInternetConnection(application: android.app.Application): Boolean
+    fun observeNetwork(application: android.app.Application)
+
 }

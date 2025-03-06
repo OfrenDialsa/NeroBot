@@ -75,11 +75,11 @@ fun TextFieldComp(
         maxLines = 5,
         colors = TextFieldDefaults.colors(
             cursorColor = NeroBotColor.Green300,
-            focusedIndicatorColor = if (isDarkTheme) NeroBotColor.Green700 else NeroBotColor.Green400,
+            focusedIndicatorColor = Color.Transparent,
             unfocusedIndicatorColor = Color.Transparent,
             selectionColors = TextSelectionColors(
                 handleColor = NeroBotColor.Green300,
-                backgroundColor = if (isDarkTheme) NeroBotColor.Green300 else NeroBotColor.Green100
+                backgroundColor = if (isDarkTheme) NeroBotColor.Green500 else NeroBotColor.Green100
             )
         ),
         textStyle = LocalTextStyle.current.copy(

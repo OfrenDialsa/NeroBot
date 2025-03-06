@@ -1,7 +1,10 @@
 package com.nerodev.nerobot.presentation.viewmodel
 
+import android.app.Application
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import android.net.Uri
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.nerodev.nerobot.data.local.MessageDataStore
 import com.nerodev.nerobot.domain.model.MessageDomainModel
@@ -13,9 +16,10 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class ChatViewModelImpl(
+    application: Application,
     private val messageDataStore: MessageDataStore,
     private val sendMessageUseCase: SendMessageUseCase
-) : ViewModel(), ChatViewModel {
+) : AndroidViewModel(application), ChatViewModel {
 
     private val _messageList = MutableStateFlow<List<MessageDomainModel>>(emptyList())
     override val messageList: StateFlow<List<MessageDomainModel>> = _messageList
@@ -32,11 +36,15 @@ class ChatViewModelImpl(
     private val _errorMessage = MutableStateFlow<String?>(null)
     override val errorMessage: StateFlow<String?> = _errorMessage
 
+    private val _isConnected = MutableStateFlow(checkInternetConnection(application))
+    val isConnected: StateFlow<Boolean> = _isConnected
+
     private var typingJob: Job? = null
     private var responseMs: Boolean = true
 
     init {
         loadMessages()
+        observeNetwork(application)
     }
 
     private fun loadMessages() {
@@ -48,6 +56,11 @@ class ChatViewModelImpl(
     }
 
     override fun sendMessage(question: String, image: String?) {
+        if (!_isConnected.value) {
+            _errorMessage.value = "Tidak ada koneksi internet. Silakan coba lagi nanti."
+            return
+        }
+
         viewModelScope.launch {
             try {
                 typingJob?.cancel()
@@ -93,7 +106,7 @@ class ChatViewModelImpl(
                 _messageList.value = _messageList.value.dropLast(1) + MessageDomainModel(responseMessage, responseRole)
                 messageDataStore.saveMessages(_messageList.value)
 
-            } catch (e: Exception) {
+            } catch (_: Exception) {
                 typingJob?.cancel()
                 _isModelResponding.value = false
                 val errorMessage = "Oops! Sepertinya ada kesalahan"
@@ -137,5 +150,23 @@ class ChatViewModelImpl(
 
     override fun skipResponse() {
         responseMs = false
+    }
+
+    override fun checkInternetConnection(application: Application): Boolean {
+        val connectivityManager =
+            application.getSystemService(ConnectivityManager::class.java)
+        val network = connectivityManager.activeNetwork ?: return false
+        val capabilities = connectivityManager.getNetworkCapabilities(network) ?: return false
+        return capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) ||
+                capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)
+    }
+
+    override fun observeNetwork(application: Application) {
+        viewModelScope.launch {
+            while (true) {
+                _isConnected.value = checkInternetConnection(application)
+                delay(2000)
+            }
+        }
     }
 }
