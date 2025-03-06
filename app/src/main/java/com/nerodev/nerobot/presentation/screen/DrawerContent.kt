@@ -77,7 +77,7 @@ fun DrawerContent(
                     )
                 },
                 selected = selectedItem == "chat",
-                onClick = { onItemSelected("chat") }, // Unique route for this item
+                onClick = { onItemSelected("chat") },
                 icon = {
                     Icon(
                         painter = painterResource(R.drawable.ic_chat),
@@ -106,7 +106,7 @@ fun DrawerContent(
                     )
                 },
                 selected = selectedItem == "saved",
-                onClick = { onItemSelected("saved") }, // Unique route for this item
+                onClick = { onItemSelected("saved") },
                 icon = {
                     Icon(
                         painter = painterResource(R.drawable.ic_saved),

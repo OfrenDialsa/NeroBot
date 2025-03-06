@@ -5,9 +5,6 @@ plugins {
     id("com.google.devtools.ksp")
 }
 
-val newsApiKey: String = project.findProperty("NEWS_API_KEY") as String? ?: ""
-val geminiApiKey: String = project.findProperty("GEMINI_API_KEY") as String? ?: ""
-
 android {
     namespace = "com.nerodev.nerobot"
     compileSdk = 35
@@ -19,8 +16,8 @@ android {
         versionCode = 1
         versionName = "1.0"
 
-        buildConfigField("String", "NEWS_API_KEY", "\"$newsApiKey\"")
-        buildConfigField("String", "GEMINI_API_KEY", "\"$geminiApiKey\"")
+        buildConfigField("String", "NEWS_API_KEY", "\"a248ae547ea44294886d9aab53d78ed0\"")
+        buildConfigField("String", "GEMINI_API_KEY", "\"AIzaSyBURdIcSeAD_ahQP-KPJDINxG8UHwD2bzw\"")
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
