@@ -165,7 +165,7 @@ class ChatViewModelImpl(
         viewModelScope.launch {
             while (true) {
                 _isConnected.value = checkInternetConnection(application)
-                delay(2000)
+                delay(1000)
             }
         }
     }

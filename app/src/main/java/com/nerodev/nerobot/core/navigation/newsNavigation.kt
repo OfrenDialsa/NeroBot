@@ -6,7 +6,6 @@ import androidx.navigation.compose.composable
 import com.nerodev.nerobot.presentation.screen.newspage.NewsPage
 
 fun NavGraphBuilder.newsNavigation(navController: NavController) {
-
     composable("news") {
         NewsPage(navController = navController)
     }
